@@ -21,7 +21,7 @@ const https = require('https');
  *
  * @param {string} org name GitHub organization
  * @param {string} repo name GitHub repository
- * @param {string} [ref='master'] git reference (branch or tag name)
+ * @param {string} [ref=master] git reference (branch or tag name)
  * @returns {object} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
  * @returns {object} result.fqRef the fully qualified name of `ref`
