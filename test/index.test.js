@@ -18,7 +18,7 @@ const assert = require('assert');
 const rp = require('request-promise-native');
 const { main } = require('../src/index.js');
 
-const ORG = 'adobe';
+const OWNER = 'adobe';
 const REPO = 'helix-cli';
 const SHORT_REF = 'master';
 const FULL_REF = 'refs/heads/master';
@@ -47,45 +47,45 @@ describe('main tests', () => {
     assert.equal(typeof result, 'object');
   });
 
-  it('main function returns 404 for missing org param', async () => {
+  it('main function returns 404 for missing owner param', async () => {
     const { statusCode } = await main({ repo: REPO, ref: SHORT_REF });
     assert.equal(statusCode, 400);
   });
 
   it('main function returns 404 for missing repo param', async () => {
-    const { statusCode } = await main({ org: ORG, ref: SHORT_REF });
+    const { statusCode } = await main({ owner: OWNER, ref: SHORT_REF });
     assert.equal(statusCode, 400);
   });
 
   it('ref param is optional with default: master', async () => {
-    const { statusCode, body: { fqRef } } = await main({ org: ORG, repo: REPO });
+    const { statusCode, body: { fqRef } } = await main({ owner: OWNER, repo: REPO });
     assert.equal(statusCode, 200);
     assert.equal(fqRef, 'refs/heads/master');
   });
 
   it('main function returns valid sha format', async () => {
-    const { statusCode, body: { sha } } = await main({ org: ORG, repo: REPO, ref: SHORT_REF });
+    const { statusCode, body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
     assert.equal(statusCode, 200);
     assert(isValidSha(sha));
   });
 
   it('main function support short and full ref names', async () => {
-    const { body: { sha: sha1 } } = await main({ org: ORG, repo: REPO, ref: SHORT_REF });
-    const { body: { sha: sha2 } } = await main({ org: ORG, repo: REPO, ref: FULL_REF });
+    const { body: { sha: sha1 } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: FULL_REF });
     assert.equal(sha1, sha2);
   });
 
   it('main function resolves tag', async () => {
-    const { body: { sha: sha1, fqRef } } = await main({ org: ORG, repo: REPO, ref: 'v1.0.0' });
+    const { body: { sha: sha1, fqRef } } = await main({ owner: OWNER, repo: REPO, ref: 'v1.0.0' });
     assert.equal(fqRef, 'refs/tags/v1.0.0');
-    const { body: { sha: sha2 } } = await main({ org: ORG, repo: REPO, ref: 'refs/tags/v1.0.0' });
+    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: 'refs/tags/v1.0.0' });
     assert.equal(sha1, sha2);
   });
 
   it('main function returns correct sha', async () => {
-    const { body: { sha } } = await main({ org: ORG, repo: REPO, ref: SHORT_REF });
+    const { body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
     const options = {
-      uri: `https://api.github.com/repos/${ORG}/${REPO}/branches/${SHORT_REF}`,
+      uri: `https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`,
       headers: {
         'User-Agent': 'Request-Promise',
       },
@@ -96,12 +96,12 @@ describe('main tests', () => {
   });
 
   it('main function returns 404 for non-existing ref', async () => {
-    const { statusCode } = await main({ org: ORG, repo: REPO, ref: 'unknown' });
+    const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: 'unknown' });
     assert.equal(statusCode, 404);
   });
 
   it('main function fails for non-existing repo', async () => {
-    const { statusCode } = await main({ org: ORG, repo: 'unknown', ref: SHORT_REF });
+    const { statusCode } = await main({ owner: OWNER, repo: 'unknown', ref: SHORT_REF });
     assert([401, 404].includes(statusCode));
   });
 });

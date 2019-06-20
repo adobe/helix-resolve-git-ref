@@ -19,25 +19,25 @@ const https = require('https');
  * This is the main function. It resolves the specified reference to the corresponding
  * sha of the HEAD commit at `ref`.
  *
- * @param {string} org name GitHub organization
- * @param {string} repo name GitHub repository
+ * @param {string} owner GitHub organization or user
+ * @param {string} repo GitHub repository name
  * @param {string} [ref=master] git reference (branch or tag name)
  * @returns {object} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
  * @returns {object} result.fqRef the fully qualified name of `ref`
  *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
  */
-function main({ org, repo, ref = 'master' }) {
+function main({ owner, repo, ref = 'master' }) {
   return new Promise((resolve/* , reject */) => {
-    if (!org || !repo) {
+    if (!owner || !repo) {
       resolve({
         statusCode: 400,
-        body: 'org and repo are mandatory parameters',
+        body: 'owner and repo are mandatory parameters',
       });
       return;
     }
 
-    https.get(`https://github.com/${org}/${repo}.git/info/refs?service=git-upload-pack`, (res) => {
+    https.get(`https://github.com/${owner}/${repo}.git/info/refs?service=git-upload-pack`, (res) => {
       const { statusCode, statusMessage } = res;
 
       if (statusCode !== 200) {
