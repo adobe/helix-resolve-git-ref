@@ -1,6 +1,6 @@
 <a name="main"></a>
 
-## main(org, repo, [ref]) ⇒ <code>object</code> \| <code>string</code> \| <code>object</code>
+## main(owner, repo, [ref]) ⇒ <code>object</code> \| <code>string</code> \| <code>object</code>
 This is the main function. It resolves the specified reference to the corresponding
 sha of the HEAD commit at `ref`.
 
@@ -10,7 +10,7 @@ sha of the HEAD commit at `ref`.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| org | <code>string</code> |  | name GitHub organization |
-| repo | <code>string</code> |  | name GitHub repository |
+| owner | <code>string</code> |  | GitHub organization or user |
+| repo | <code>string</code> |  | GitHub repository name |
 | [ref] | <code>string</code> | <code>&quot;master&quot;</code> | git reference (branch or tag name) |
 
