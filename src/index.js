@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-/* eslint-disable no-console */
 /* eslint-disable prefer-promise-reject-errors */
 
 const https = require('https');
@@ -93,12 +92,11 @@ function main({ owner, repo, ref = 'master' }) {
           });
         }
       });
-    /*
     }).on('error', (e) => {
-      // TODO: find a way to test the following lines
-      console.error(e);
-      reject(e);
-    */
+      resolve({
+        statusCode: 503,
+        body: `failed to fetch git repo info:\n${String(e.stack)}`,
+      });
     });
   });
 }

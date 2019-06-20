@@ -16,6 +16,7 @@
 
 const assert = require('assert');
 const rp = require('request-promise-native');
+const nock = require('nock');
 const { main } = require('../src/index.js');
 
 const OWNER = 'adobe';
@@ -103,5 +104,17 @@ describe('main tests', () => {
   it('main function fails for non-existing repo', async () => {
     const { statusCode } = await main({ owner: OWNER, repo: 'unknown', ref: SHORT_REF });
     assert([401, 404].includes(statusCode));
+  });
+
+  it('main function returns 503 for network errors', async () => {
+    nock.disableNetConnect();
+    try {
+      const { statusCode } = await main({ org: ORG, repo: REPO, ref: SHORT_REF });
+      assert.equal(statusCode, 503);
+    } finally {
+      // reset nock
+      nock.cleanAll();
+      nock.enableNetConnect();
+    }
   });
 });
