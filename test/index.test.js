@@ -109,7 +109,7 @@ describe('main tests', () => {
   it('main function returns 503 for network errors', async () => {
     nock.disableNetConnect();
     try {
-      const { statusCode } = await main({ org: ORG, repo: REPO, ref: SHORT_REF });
+      const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
       assert.equal(statusCode, 503);
     } finally {
       // reset nock
