@@ -1,3 +1,20 @@
+# 1.0.0 (2019-06-21)
+
+
+### Bug Fixes
+
+* **index, API:** rename `org` parameter to `owner` for consistency ([ec72b97](https://github.com/adobe/helix-resolve-git-ref/commit/ec72b97)), closes [#4](https://github.com/adobe/helix-resolve-git-ref/issues/4)
+
+
+### Features
+
+* **index.js:** return 503 on network issues, added test ([3850b19](https://github.com/adobe/helix-resolve-git-ref/commit/3850b19))
+
+
+### BREAKING CHANGES
+
+* **index, API:** changed parameter name `org` to `owner`
+
 # [1.1.0](https://github.com/adobe/helix-service/compare/v1.0.1...v1.1.0) (2019-06-12)
 
 
