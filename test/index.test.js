@@ -101,9 +101,9 @@ describe('main tests', () => {
     assert.equal(statusCode, 404);
   });
 
-  it('main function fails for non-existing repo', async () => {
+  it('main function returns 404 for non-existing repo', async () => {
     const { statusCode } = await main({ owner: OWNER, repo: 'unknown', ref: SHORT_REF });
-    assert([401, 404].includes(statusCode));
+    assert.equal(statusCode, 404);
   });
 
   it('main function returns 503 for network errors', async () => {
@@ -115,6 +115,19 @@ describe('main tests', () => {
       // reset nock
       nock.cleanAll();
       nock.enableNetConnect();
+    }
+  });
+
+  it('main function returns 502 for 5xx github server errors', async () => {
+    nock('https://github.com')
+      .get(/.*/)
+      .reply(599);
+    try {
+      const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+      assert.equal(statusCode, 502);
+    } finally {
+      // reset nock
+      nock.cleanAll();
     }
   });
 });
