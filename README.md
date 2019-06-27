@@ -15,7 +15,7 @@
 ## Usage
 
 ```bash
-curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "owner=adobe&repo=helix-resolve-git-ref" https://adobeioruntime.net/api/v1/web/sguggisb/default/resolve-git-ref
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "owner=adobe&repo=helix-resolve-git-ref" https://adobeioruntime.net/api/v1/web/helix/helix-services/resolve-git-ref@v1
 ```
 
 For more, see the [API documentation](docs/API.md).
