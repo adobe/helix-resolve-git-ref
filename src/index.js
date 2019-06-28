@@ -14,6 +14,9 @@
 
 const https = require('https');
 
+const { wrap } = require('@adobe/helix-pingdom-status');
+const { openWhiskWrapper } = require('epsagon');
+
 /**
  * This is the main function. It resolves the specified reference to the corresponding
  * sha of the HEAD commit at `ref`.
@@ -102,3 +105,8 @@ function main({ owner, repo, ref = 'master' }) {
 }
 
 module.exports = { main };
+module.exports.main = wrap(openWhiskWrapper(main, {
+  token_param: 'EPSAGON_TOKEN',
+  appName: 'Helix Services',
+  metadataOnly: false, // Optional, send more trace data
+}));
