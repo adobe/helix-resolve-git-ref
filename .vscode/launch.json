@@ -41,11 +41,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch 'hlx up'",
-            "program": "${workspaceFolder}/index.js",
-            "args":[
-                "up"
-            ]
+            "name": "wskdebug resolve-git-ref",
+            "runtimeExecutable": "wskdebug",
+            "args": [ "resolve-git-ref", "${workspaceFolder}/src/index.js", "-l", "-v" ],
+            "localRoot": "${workspaceFolder}/src",
+            "remoteRoot": "/code",
+            "outputCapture": "std"
         }
     ]
 }
