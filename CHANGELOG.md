@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.0.0...v1.1.0) (2019-06-29)
+
+
+### Features
+
+* epsagon & pingdom support ([766e182](https://github.com/adobe/helix-resolve-git-ref/commit/766e182)), closes [#13](https://github.com/adobe/helix-resolve-git-ref/issues/13) [#14](https://github.com/adobe/helix-resolve-git-ref/issues/14)
+
 # 1.0.0 (2019-06-21)
 
 
