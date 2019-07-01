@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.1.0...v1.1.1) (2019-07-01)
+
+
+### Bug Fixes
+
+* **index:** Map non-200 github.com status codes to 404 and 502 ([46a18bf](https://github.com/adobe/helix-resolve-git-ref/commit/46a18bf)), closes [#5](https://github.com/adobe/helix-resolve-git-ref/issues/5)
+
 # [1.1.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.0.0...v1.1.0) (2019-06-29)
 
 
