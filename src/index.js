@@ -41,12 +41,20 @@ function main({ owner, repo, ref = 'master' }) {
 
     https.get(`https://github.com/${owner}/${repo}.git/info/refs?service=git-upload-pack`, (res) => {
       const { statusCode, statusMessage } = res;
-
       if (statusCode !== 200) {
         // consume response data to free up memory
         res.resume();
+        let status = 500;
+        if (statusCode >= 400 && statusCode <= 499) {
+          // not found
+          status = 404;
+        }
+        if (statusCode >= 500 && statusCode <= 599) {
+          // bad gateway
+          status = 502;
+        }
         resolve({
-          statusCode,
+          statusCode: status,
           body: `failed to fetch git repo info (statusCode: ${statusCode}, statusMessage: ${statusMessage})`,
         });
         return;
@@ -96,8 +104,9 @@ function main({ owner, repo, ref = 'master' }) {
         }
       });
     }).on('error', (e) => {
+      // (temporary?) network issue
       resolve({
-        statusCode: 503,
+        statusCode: 503, // service unavailable
         body: `failed to fetch git repo info:\n${String(e.stack)}`,
       });
     });
