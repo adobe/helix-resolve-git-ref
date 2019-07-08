@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
-    "@adobe/helix-pingdom-status": "^1.4.0",
+    "@adobe/helix-pingdom-status": "^1.4.1",
     "epsagon": "^1.27.2",
     "snyk": "^1.189.0"
   },
