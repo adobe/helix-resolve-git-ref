@@ -24,9 +24,9 @@ const { openWhiskWrapper } = require('epsagon');
  * @param {string} owner GitHub organization or user
  * @param {string} repo GitHub repository name
  * @param {string} [ref=master] git reference (branch or tag name)
- * @returns {object} result
+ * @returns {Promise<object>} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
- * @returns {object} result.fqRef the fully qualified name of `ref`
+ * @returns {string} result.fqRef the fully qualified name of `ref`
  *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
  */
 function main({ owner, repo, ref = 'master' }) {
@@ -113,7 +113,6 @@ function main({ owner, repo, ref = 'master' }) {
   });
 }
 
-module.exports = { main };
 module.exports.main = wrap(openWhiskWrapper(main, {
   token_param: 'EPSAGON_TOKEN',
   appName: 'Helix Services',
