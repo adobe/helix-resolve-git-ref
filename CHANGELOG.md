@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.1.1...v1.1.2) (2019-07-09)
+
+
+### Bug Fixes
+
+* **epsagon:** ensure that epsagon integration is only loaded when token is present ([#22](https://github.com/adobe/helix-resolve-git-ref/issues/22)) ([31101ee](https://github.com/adobe/helix-resolve-git-ref/commit/31101ee)), closes [#21](https://github.com/adobe/helix-resolve-git-ref/issues/21)
+
 ## [1.1.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.1.0...v1.1.1) (2019-07-01)
 
 
