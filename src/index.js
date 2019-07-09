@@ -15,7 +15,9 @@
 const https = require('https');
 
 const { wrap } = require('@adobe/helix-pingdom-status');
-const { openWhiskWrapper } = require('epsagon');
+const { logger: createLogger } = require('@adobe/openwhisk-action-builder/src/logging');
+
+let log;
 
 /**
  * This is the main function. It resolves the specified reference to the corresponding
@@ -29,7 +31,7 @@ const { openWhiskWrapper } = require('epsagon');
  * @returns {string} result.fqRef the fully qualified name of `ref`
  *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
  */
-function main({ owner, repo, ref = 'master' }) {
+function lookup({ owner, repo, ref = 'master' }) {
   return new Promise((resolve/* , reject */) => {
     if (!owner || !repo) {
       resolve({
@@ -113,8 +115,50 @@ function main({ owner, repo, ref = 'master' }) {
   });
 }
 
-module.exports.main = wrap(openWhiskWrapper(main, {
-  token_param: 'EPSAGON_TOKEN',
-  appName: 'Helix Services',
-  metadataOnly: false, // Optional, send more trace data
-}));
+/**
+ * Runs the action by wrapping the `lookup` function with the pingdom-status utility.
+ * Additionally, if a EPSAGON_TOKEN is configured, the epsagon tracers are instrumented.
+ * @param params Action params
+ * @returns {Promise<*>} The response
+ */
+async function run(params) {
+  let action = lookup;
+  if (params && params.EPSAGON_TOKEN) {
+    // ensure that epsagon is only required, if a token is present. this is to avoid invoking their
+    // patchers otherwise.
+    // eslint-disable-next-line global-require
+    const { openWhiskWrapper } = require('epsagon');
+    log.info('instrumenting epsagon.');
+    action = openWhiskWrapper(action, {
+      token_param: 'EPSAGON_TOKEN',
+      appName: 'Helix Services',
+      metadataOnly: false, // Optional, send more trace data
+    });
+  }
+  return wrap(action)(params);
+}
+
+/**
+ * Main function called by the openwhisk invoker.
+ * @param params Action params
+ * @param logger The logger.
+ * @returns {Promise<*>} The response
+ */
+async function main(params, logger = log) {
+  try {
+    log = createLogger(params, logger);
+    const result = await run(params);
+    if (log.flush) {
+      log.flush(); // don't wait
+    }
+    return result;
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+    return {
+      statusCode: e.statusCode || 500,
+    };
+  }
+}
+
+module.exports.main = main;
