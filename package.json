@@ -29,7 +29,8 @@
   "dependencies": {
     "@adobe/helix-pingdom-status": "^1.4.1",
     "@adobe/openwhisk-action-builder": "^1.0.2",
-    "epsagon": "^1.29.0"
+    "epsagon": "^1.29.0",
+    "snyk": "^1.192.4"
   },
   "devDependencies": {
     "@adobe/helix-shared": "^1.5.1",
@@ -59,8 +60,7 @@
     "proxyquire": "^2.1.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "semantic-release": "^15.13.3",
-    "snyk": "^1.185.5"
+    "semantic-release": "^15.13.3"
   },
   "snyk": true,
   "lint-staged": {
