@@ -17,12 +17,22 @@
 const assert = require('assert');
 const rp = require('request-promise-native');
 const nock = require('nock');
-const { main } = require('../src/index.js');
+const proxyquire = require('proxyquire');
+const { Logger } = require('@adobe/helix-shared');
 
 const OWNER = 'adobe';
 const REPO = 'helix-cli';
 const SHORT_REF = 'master';
 const FULL_REF = 'refs/heads/master';
+
+
+const { main } = proxyquire('../src/index.js', {
+  epsagon: {
+    openWhiskWrapper(action) {
+      return params => action(params);
+    },
+  },
+});
 
 /**
  * Checks if the specified string is a valid SHA-1 value.
@@ -129,5 +139,42 @@ describe('main tests', () => {
       // reset nock
       nock.cleanAll();
     }
+  });
+
+  it('main() without parameters reports status', async () => {
+    const res = await main({ __ow_method: 'get' });
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.body.split('\n')[0], '<pingdom_http_custom_check>');
+  });
+
+  it('index function instruments epsagon', async () => {
+    const logger = Logger.getTestLogger({
+      // tune this for debugging
+      level: 'info',
+    });
+    logger.fields = {}; // avoid errors during setup. test logger is winston, but we need bunyan.
+    logger.flush = () => {};
+    await main({
+      EPSAGON_TOKEN: 'foobar',
+    }, logger);
+
+    const output = await logger.getOutput();
+    assert.ok(output.indexOf('instrumenting epsagon.') >= 0);
+  });
+
+  it('error in main function is caught', async () => {
+    const logger = Logger.getTestLogger({
+      // tune this for debugging
+      level: 'info',
+    });
+    logger.fields = {}; // avoid errors during setup. test logger is winston, but we need bunyan.
+    logger.flush = () => {
+      throw new Error('error during flush.');
+    };
+    const result = await main({}, logger);
+
+    assert.deepEqual(result, {
+      statusCode: 500,
+    });
   });
 });
