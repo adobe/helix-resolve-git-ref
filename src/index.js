@@ -135,9 +135,7 @@ async function run(params) {
       metadataOnly: false, // Optional, send more trace data
     });
   }
-  return wrap(action, {
-    github: 'https://github.com/',
-  })(params);
+  return wrap(action)(params);
 }
 
 /**
