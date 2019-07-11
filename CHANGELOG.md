@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.1.2...v1.2.0) (2019-07-11)
+
+
+### Features
+
+* **index:** add pingdom-status check for github ([8bae66a](https://github.com/adobe/helix-resolve-git-ref/commit/8bae66a)), closes [#24](https://github.com/adobe/helix-resolve-git-ref/issues/24)
+* **index:** add pingdom-status check for github ([22955f3](https://github.com/adobe/helix-resolve-git-ref/commit/22955f3))
+
 ## [1.1.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.1.1...v1.1.2) (2019-07-09)
 
 

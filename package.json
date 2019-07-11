@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-resolve-git-ref",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
   "main": "src/index.js",
   "scripts": {
@@ -75,7 +75,7 @@
     }
   },
   "wsk": {
-    "name": "helix-services/resolve-git-ref@1.1.2",
+    "name": "helix-services/resolve-git-ref@1.2.0",
     "static": []
   }
 }
