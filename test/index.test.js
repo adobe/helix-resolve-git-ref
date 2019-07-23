@@ -141,8 +141,8 @@ describe('main tests', () => {
     }
   });
 
-  it('main() without parameters reports status', async () => {
-    const res = await main({ __ow_method: 'get' });
+  it('main() with path /_status_check/pingdom.xml reports status', async () => {
+    const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/pingdom.xml' });
     assert.equal(res.statusCode, 200);
     assert.equal(res.body.split('\n')[0], '<pingdom_http_custom_check>');
   });
