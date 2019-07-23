@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.2.0...v1.3.0) (2019-07-23)
+
+
+### Bug Fixes
+
+* **package:** update @adobe/helix-pingdom-status to version 2.0.0 ([de189ea](https://github.com/adobe/helix-resolve-git-ref/commit/de189ea))
+* **test:** broken test ([e35a48c](https://github.com/adobe/helix-resolve-git-ref/commit/e35a48c))
+
+
+### Features
+
+* **package:** force a new release ([20b3d03](https://github.com/adobe/helix-resolve-git-ref/commit/20b3d03))
+
 # [1.2.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.1.2...v1.2.0) (2019-07-11)
 
 
