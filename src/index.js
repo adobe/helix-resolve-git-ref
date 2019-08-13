@@ -84,7 +84,7 @@ function lookup({ owner, repo, ref = 'master' }) {
         const result = lines.filter((row) => {
           const parts = row.split(' ');
           return parts.length === 2 && searchTerms.includes(parts[1]);
-        }).map(row => row.substr(4).split(' ')); // skip leading pkt-len (4 bytes) (https://git-scm.com/docs/protocol-common#_pkt_line_format)
+        }).map((row) => row.substr(4).split(' ')); // skip leading pkt-len (4 bytes) (https://git-scm.com/docs/protocol-common#_pkt_line_format)
         if (result.length) {
           resolve({
             statusCode: 200,
