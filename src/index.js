@@ -136,7 +136,7 @@ async function run(params) {
     });
   }
   return wrap(action, {
-    github: 'https://github.com/',
+    github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack',
   })(params);
 }
 
