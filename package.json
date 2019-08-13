@@ -1,6 +1,6 @@
 {
   "name": "@adobe/helix-resolve-git-ref",
-  "version": "1.3.2",
+  "version": "1.3.1",
   "description": "An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
   "main": "src/index.js",
   "scripts": {
@@ -27,40 +27,38 @@
   },
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
-    "@adobe/helix-pingdom-status": "^3.1.0",
-    "@adobe/openwhisk-action-builder": "^1.0.2",
-    "epsagon": "^1.29.0"
+    "@adobe/helix-pingdom-status": "^3.0.0",
+    "@adobe/openwhisk-action-builder": "^1.3.1",
+    "epsagon": "^1.32.0"
   },
   "devDependencies": {
+    "@adobe/eslint-config-helix": "^1.0.0",
     "@adobe/helix-shared": "^2.0.0",
     "@semantic-release/changelog": "^3.0.2",
-    "@semantic-release/commit-analyzer": "^6.1.0",
-    "@semantic-release/exec": "^3.3.2",
+    "@semantic-release/commit-analyzer": "^6.3.0",
+    "@semantic-release/exec": "^3.3.6",
     "@semantic-release/git": "^7.0.8",
     "@semantic-release/github": "^5.2.10",
     "@semantic-release/npm": "^5.1.9",
-    "@semantic-release/release-notes-generator": "^7.1.4",
-    "ajv": "^6.10.0",
+    "@semantic-release/release-notes-generator": "^7.3.0",
+    "ajv": "^6.10.2",
     "codecov": "^3.3.0",
     "commitizen": "^4.0.0",
     "cz-conventional-changelog": "^3.0.0",
-    "eslint": "^6.0.0",
-    "eslint-config-airbnb": "^17.1.0",
+    "eslint": "^6.1.0",
     "eslint-plugin-header": "^3.0.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-import": "^2.18.2",
     "jsdoc-to-markdown": "^5.0.0",
-    "junit-report-builder": "^1.3.2",
-    "lint-staged": "^9.0.0",
-    "mocha": "^6.1.4",
+    "junit-report-builder": "^1.3.3",
+    "lint-staged": "^9.2.1",
+    "mocha": "^6.2.0",
     "nock": "^10.0.6",
     "nyc": "^14.1.1",
-    "proxyquire": "^2.1.0",
+    "proxyquire": "^2.1.3",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
-    "semantic-release": "^15.13.3",
-    "snyk": "^1.185.5"
+    "semantic-release": "^15.13.19",
+    "snyk": "^1.216.0"
   },
   "snyk": true,
   "lint-staged": {
@@ -75,7 +73,7 @@
     }
   },
   "wsk": {
-    "name": "helix-services/resolve-git-ref@1.3.2",
+    "name": "helix-services/resolve-git-ref@1.3.1",
     "static": []
   }
 }

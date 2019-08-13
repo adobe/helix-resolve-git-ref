@@ -29,7 +29,7 @@ const FULL_REF = 'refs/heads/master';
 const { main } = proxyquire('../src/index.js', {
   epsagon: {
     openWhiskWrapper(action) {
-      return params => action(params);
+      return (params) => action(params);
     },
   },
 });
@@ -144,7 +144,7 @@ describe('main tests', () => {
   it('main() with path /_status_check/pingdom.xml reports status', async () => {
     const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/pingdom.xml' });
     assert.equal(res.statusCode, 200);
-    assert.ok(res.body.split('\n')[0].match('<pingdom_http_custom_check>'));
+    assert.equal(res.body.split('\n')[0], '<pingdom_http_custom_check><status>OK</status>');
   });
 
   it('index function instruments epsagon', async () => {
