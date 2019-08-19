@@ -15,7 +15,7 @@
 const https = require('https');
 
 const { wrap } = require('@adobe/helix-pingdom-status');
-const { logger: createLogger } = require('@adobe/openwhisk-action-builder/src/logging');
+const { logger: createLogger } = require('@adobe/openwhisk-action-utils');
 
 let log;
 

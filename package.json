@@ -28,12 +28,13 @@
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
     "@adobe/helix-pingdom-status": "^3.0.0",
-    "@adobe/openwhisk-action-builder": "^2.0.0",
+    "@adobe/openwhisk-action-utils": "^1.0.2",
     "epsagon": "^1.32.0"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "^1.0.0",
     "@adobe/helix-shared": "^2.0.0",
+    "@adobe/openwhisk-action-builder": "^2.0.0",
     "@semantic-release/changelog": "^3.0.2",
     "@semantic-release/commit-analyzer": "^6.3.0",
     "@semantic-release/exec": "^3.3.6",
