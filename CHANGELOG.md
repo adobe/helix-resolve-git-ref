@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/adobe/helix-resolve-git-ref/compare/v1.3.2...v1.3.3) (2019-08-19)
+
+
+### Bug Fixes
+
+* **package:** update @adobe/openwhisk-action-builder to version 2.0.0 ([d0e0007](https://github.com/adobe/helix-resolve-git-ref/commit/d0e0007))
+
 ## [1.3.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.3.1...v1.3.2) (2019-08-12)
 
 
