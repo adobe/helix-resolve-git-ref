@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.3.3...v1.4.0) (2019-08-22)
+
+
+### Features
+
+* **monitoring:** upgrade from helix-pingdom-status to helix-status ([bea1cb3](https://github.com/adobe/helix-resolve-git-ref/commit/bea1cb3))
+
 ## [1.3.3](https://github.com/adobe/helix-resolve-git-ref/compare/v1.3.2...v1.3.3) (2019-08-19)
 
 
