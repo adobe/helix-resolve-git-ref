@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.4.0...v1.4.1) (2019-08-26)
+
+
+### Bug Fixes
+
+* **monitoring:** upgrade epsagon and hide more params ([daba2b4](https://github.com/adobe/helix-resolve-git-ref/commit/daba2b4))
+
 # [1.4.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.3.3...v1.4.0) (2019-08-22)
 
 
