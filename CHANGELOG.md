@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.4.1...v1.4.2) (2019-08-27)
+
+
+### Bug Fixes
+
+* **dependencies:** bump epsagon version ([c79b419](https://github.com/adobe/helix-resolve-git-ref/commit/c79b419))
+
 ## [1.4.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.4.0...v1.4.1) (2019-08-26)
 
 
