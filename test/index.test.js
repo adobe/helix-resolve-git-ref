@@ -213,14 +213,22 @@ describe('main tests', () => {
     const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
     assert.equal(statusCode, 502);
   });
+});
 
-  it.skip('main function returns 503 for network errors', async () => {
+describe('network/server error tests', () => {
+  it('main function returns 503 for network errors', async () => {
+    // nock is also used by PollyJS under the hood.
+    // In order to avoid unwanted side effects we have to reset nock.
+    nock.cleanAll();
+    nock.restore();
+    nock.activate();
+
+    // simulate network problem
     nock.disableNetConnect();
     try {
       const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
       assert.equal(statusCode, 503);
     } finally {
-      // reset nock
       nock.cleanAll();
       nock.enableNetConnect();
     }
