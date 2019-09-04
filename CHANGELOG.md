@@ -1,3 +1,16 @@
+# [1.5.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.4.3...v1.5.0) (2019-09-04)
+
+
+### Bug Fixes
+
+* **monitoring:** upgrade to fixed @adobe/helix-status version 4.3.3 ([c7245ba](https://github.com/adobe/helix-resolve-git-ref/commit/c7245ba))
+* **package:** update @adobe/helix-status to version 4.3.0 ([908624d](https://github.com/adobe/helix-resolve-git-ref/commit/908624d))
+
+
+### Features
+
+* **index:** support private repositories ([156893f](https://github.com/adobe/helix-resolve-git-ref/commit/156893f)), closes [#1](https://github.com/adobe/helix-resolve-git-ref/issues/1)
+
 ## [1.4.3](https://github.com/adobe/helix-resolve-git-ref/compare/v1.4.2...v1.4.3) (2019-09-03)
 
 
