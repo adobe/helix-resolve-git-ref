@@ -59,7 +59,7 @@ describe('main tests', () => {
     recordIfMissing: false,
     matchRequestsBy: {
       headers: {
-        exclude: ['authorization'],
+        exclude: ['authorization', 'User-Agent'],
       },
     },
     logging: false,
@@ -126,7 +126,8 @@ describe('main tests', () => {
       json: true,
     };
     const { commit } = await rp(options);
-    assert(commit && commit.sha === sha);
+    assert.ok(commit);
+    assert.equal(commit.sha, sha);
   });
 
   it('main function returns 404 for non-existing ref', async () => {
