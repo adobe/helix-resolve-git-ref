@@ -23,15 +23,26 @@ let log;
  * This is the main function. It resolves the specified reference to the corresponding
  * sha of the HEAD commit at `ref`.
  *
- * @param {string} owner GitHub organization or user
- * @param {string} repo GitHub repository name
- * @param {string} [ref=master] git reference (branch or tag name)
+ * @param {Object} params The OpenWhisk parameters
+ * @param {string} params.owner GitHub organization or user
+ * @param {string} params.repo GitHub repository name
+ * @param {string} [params.ref=master] git reference (branch or tag name)
+ * @param {Object} params.__ow_headers The request headers of this web action invokation
  * @returns {Promise<object>} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
  * @returns {string} result.fqRef the fully qualified name of `ref`
  *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
  */
-function lookup({ owner, repo, ref = 'master' }) {
+function lookup(params = {}) {
+  const {
+    owner,
+    repo,
+    ref = 'master',
+    __ow_headers = {},
+  } = params;
+
+  const githubToken = params.GITHUB_TOKEN || __ow_headers['x-github-token'];
+
   return new Promise((resolve/* , reject */) => {
     if (!owner || !repo) {
       resolve({
@@ -41,7 +52,16 @@ function lookup({ owner, repo, ref = 'master' }) {
       return;
     }
 
-    https.get(`https://github.com/${owner}/${repo}.git/info/refs?service=git-upload-pack`, (res) => {
+    const options = {
+      host: 'github.com',
+      path: `/${owner}/${repo}.git/info/refs?service=git-upload-pack`,
+    };
+    if (githubToken) {
+      // the git transfer protocol supports basic auth with any user name and the token as password
+      options.auth = `any_user:${githubToken}`;
+    }
+
+    https.get(options, (res) => {
       const { statusCode, statusMessage } = res;
       if (statusCode !== 200) {
         // consume response data to free up memory

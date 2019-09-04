@@ -15,16 +15,21 @@
 'use strict';
 
 const assert = require('assert');
-const rp = require('request-promise-native');
+const path = require('path');
+
+const NodeHttpAdapter = require('@pollyjs/adapter-node-http');
+const FSPersister = require('@pollyjs/persister-fs');
+const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
+const rp = require('request-promise-native');
 const proxyquire = require('proxyquire');
 const { Logger } = require('@adobe/helix-shared');
 
 const OWNER = 'adobe';
 const REPO = 'helix-cli';
+const PRIVATE_REPO = 'project-helix';
 const SHORT_REF = 'master';
 const FULL_REF = 'refs/heads/master';
-
 
 const { main } = proxyquire('../src/index.js', {
   epsagon: {
@@ -49,6 +54,24 @@ function isValidSha(str) {
 }
 
 describe('main tests', () => {
+  setupPolly({
+    recordFailedRequests: false,
+    recordIfMissing: false,
+    matchRequestsBy: {
+      headers: {
+        exclude: ['authorization'],
+      },
+    },
+    logging: false,
+    adapters: [NodeHttpAdapter],
+    persister: FSPersister,
+    persisterOptions: {
+      fs: {
+        recordingsDir: path.resolve(__dirname, 'fixtures/recordings'),
+      },
+    },
+  });
+
   it('main function is present', () => {
     assert(typeof main === 'function');
   });
@@ -80,7 +103,7 @@ describe('main tests', () => {
     assert(isValidSha(sha));
   });
 
-  it('main function support short and full ref names', async () => {
+  it('main function supports short and full ref names', async () => {
     const { body: { sha: sha1 } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
     const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: FULL_REF });
     assert.equal(sha1, sha2);
@@ -116,29 +139,26 @@ describe('main tests', () => {
     assert.equal(statusCode, 404);
   });
 
-  it('main function returns 503 for network errors', async () => {
-    nock.disableNetConnect();
-    try {
-      const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-      assert.equal(statusCode, 503);
-    } finally {
-      // reset nock
-      nock.cleanAll();
-      nock.enableNetConnect();
-    }
+  it('main() works with private GitHub repo (gh token via header)', async () => {
+    const { statusCode, body: { fqRef } } = await main({
+      owner: OWNER,
+      repo: PRIVATE_REPO,
+      ref: SHORT_REF,
+      __ow_headers: { 'x-github-token': 'undisclosed-github-token' },
+    });
+    assert.equal(statusCode, 200);
+    assert.equal(fqRef, FULL_REF);
   });
 
-  it('main function returns 502 for 5xx github server errors', async () => {
-    nock('https://github.com')
-      .get(/.*/)
-      .reply(599);
-    try {
-      const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-      assert.equal(statusCode, 502);
-    } finally {
-      // reset nock
-      nock.cleanAll();
-    }
+  it('main() works with private GitHub repo (gh token via param)', async () => {
+    const { statusCode, body: { fqRef } } = await main({
+      owner: OWNER,
+      repo: PRIVATE_REPO,
+      ref: SHORT_REF,
+      GITHUB_TOKEN: 'undisclosed-github-token',
+    });
+    assert.equal(statusCode, 200);
+    assert.equal(fqRef, FULL_REF);
   });
 
   it('main() with path /_status_check/pingdom.xml reports status', async () => {
@@ -171,10 +191,46 @@ describe('main tests', () => {
     logger.flush = () => {
       throw new Error('error during flush.');
     };
-    const result = await main({}, logger);
+    try {
+      const result = await main({}, logger);
+      assert.deepEqual(result, {
+        statusCode: 500,
+      });
+    } finally {
+      logger.flush = () => {};
+    }
+  });
 
-    assert.deepEqual(result, {
-      statusCode: 500,
+  // eslint-disable-next-line func-names
+  it('main function returns 502 for 5xx github server errors', async function () {
+    const { server } = this.polly;
+    server.host('https://github.com', () => {
+      server.get('*').intercept((req, res) => {
+        res.status(599);
+      });
     });
+
+    const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    assert.equal(statusCode, 502);
+  });
+});
+
+describe('network/server error tests', () => {
+  it('main function returns 503 for network errors', async () => {
+    // nock is also used by PollyJS under the hood.
+    // In order to avoid unwanted side effects we have to reset nock.
+    nock.cleanAll();
+    nock.restore();
+    nock.activate();
+
+    // simulate network problem
+    nock.disableNetConnect();
+    try {
+      const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+      assert.equal(statusCode, 503);
+    } finally {
+      nock.cleanAll();
+      nock.enableNetConnect();
+    }
   });
 });

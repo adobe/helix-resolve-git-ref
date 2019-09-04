@@ -6,6 +6,7 @@ junit
 test
 .snyk
 *.tgz
+*.rest
 build
 logs
 test-results.xml
