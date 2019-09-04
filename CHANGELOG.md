@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.0...v1.5.1) (2019-09-04)
+
+
+### Bug Fixes
+
+* **package:** update @adobe/helix-status to version 4.3.3 ([e331796](https://github.com/adobe/helix-resolve-git-ref/commit/e331796))
+
 # [1.5.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.4.3...v1.5.0) (2019-09-04)
 
 
