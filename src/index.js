@@ -23,6 +23,9 @@ let log;
  * This is the main function. It resolves the specified reference to the corresponding
  * sha of the HEAD commit at `ref`.
  *
+ * If the specified repository is private you have to provide a valid GitHub access token
+ * either via `x-github-token` header or `GITHUB_TOKEN` action parameter.
+ *
  * @param {Object} params The OpenWhisk parameters
  * @param {string} params.owner GitHub organization or user
  * @param {string} params.repo GitHub repository name
