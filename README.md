@@ -27,3 +27,5 @@ For more, see the [API documentation](docs/API.md).
 Deploying Helix Resolve-Git-Ref requires the `wsk` command line client, authenticated to a namespace of your choice. For Project Helix, we use the `helix` namespace.
 
 All commits to master that pass the testing will be deployed automatically. All commits to branches that will pass the testing will get commited as `/helix-services/resolve-git-ref@ci<num>` and tagged with the CI build number.
+
+
