@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.1...v1.5.2) (2019-09-28)
+
+
+### Bug Fixes
+
+* **readme:** force re-deploy ([8be98ca](https://github.com/adobe/helix-resolve-git-ref/commit/8be98ca))
+
 ## [1.5.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.0...v1.5.1) (2019-09-04)
 
 
