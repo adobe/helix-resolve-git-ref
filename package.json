@@ -77,7 +77,7 @@
     "static": []
   },
   "statuspage": {
-    "name": "GitHub Reference Resolver",
+    "name": "Helix Git Reference Resolver",
     "group": "Delivery"
   },
   "newrelic": {
