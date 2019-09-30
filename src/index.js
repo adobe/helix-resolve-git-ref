@@ -15,9 +15,7 @@
 const https = require('https');
 
 const { wrap } = require('@adobe/helix-status');
-const { logger: createLogger } = require('@adobe/openwhisk-action-utils');
-
-let log;
+const { logger } = require('@adobe/openwhisk-action-utils');
 
 /**
  * This is the main function. It resolves the specified reference to the corresponding
@@ -145,6 +143,7 @@ function lookup(params = {}) {
  * @returns {Promise<*>} The response
  */
 async function run(params) {
+  const { __ow_logger: log } = params;
   let action = lookup;
   if (params && params.EPSAGON_TOKEN) {
     // ensure that epsagon is only required, if a token is present. this is to avoid invoking their
@@ -167,24 +166,10 @@ async function run(params) {
 /**
  * Main function called by the openwhisk invoker.
  * @param params Action params
- * @param logger The logger.
  * @returns {Promise<*>} The response
  */
-async function main(params, logger = log) {
-  try {
-    log = createLogger(params, logger);
-    const result = await run(params);
-    if (log.flush) {
-      log.flush(); // don't wait
-    }
-    return result;
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(e);
-    return {
-      statusCode: e.statusCode || 500,
-    };
-  }
+async function main(params) {
+  return logger.wrap(run, params);
 }
 
 module.exports.main = main;
