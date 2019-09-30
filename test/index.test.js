@@ -23,7 +23,7 @@ const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
 const rp = require('request-promise-native');
 const proxyquire = require('proxyquire');
-const { Logger } = require('@adobe/helix-shared');
+const bunyan = require('bunyan');
 
 const OWNER = 'adobe';
 const REPO = 'helix-cli';
@@ -169,37 +169,20 @@ describe('main tests', () => {
   });
 
   it('index function instruments epsagon', async () => {
-    const logger = Logger.getTestLogger({
-      // tune this for debugging
-      level: 'info',
+    const logger = bunyan.createLogger({
+      name: 'test-logger',
+      streams: [{
+        level: 'info',
+        type: 'raw',
+        stream: new bunyan.RingBuffer({ limit: 100 }),
+      }],
     });
-    logger.fields = {}; // avoid errors during setup. test logger is winston, but we need bunyan.
-    logger.flush = () => {};
     await main({
       EPSAGON_TOKEN: 'foobar',
+      __ow_logger: logger,
     }, logger);
 
-    const output = await logger.getOutput();
-    assert.ok(output.indexOf('instrumenting epsagon.') >= 0);
-  });
-
-  it('error in main function is caught', async () => {
-    const logger = Logger.getTestLogger({
-      // tune this for debugging
-      level: 'info',
-    });
-    logger.fields = {}; // avoid errors during setup. test logger is winston, but we need bunyan.
-    logger.flush = () => {
-      throw new Error('error during flush.');
-    };
-    try {
-      const result = await main({}, logger);
-      assert.deepEqual(result, {
-        statusCode: 500,
-      });
-    } finally {
-      logger.flush = () => {};
-    }
+    assert.strictEqual(logger.streams[0].stream.records[0].msg, 'instrumenting epsagon.');
   });
 
   // eslint-disable-next-line func-names
