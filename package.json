@@ -75,5 +75,12 @@
   "wsk": {
     "name": "helix-services/resolve-git-ref@1.5.3",
     "static": []
+  },
+  "statuspage": {
+    "name": "GitHub Reference Resolver",
+    "group": "Delivery"
+  },
+  "newrelic": {
+    "group_policy": "Delivery Repeated Failure"
   }
 }
