@@ -1,6 +1,7 @@
 {
   "name": "@adobe/helix-resolve-git-ref",
   "version": "1.5.4",
+  "private": true,
   "description": "An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
   "main": "src/index.js",
   "scripts": {
@@ -8,11 +9,16 @@
     "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 94 --statements 95 --lines 98 mocha --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
     "lint": "./node_modules/.bin/eslint .",
     "semantic-release": "semantic-release",
-    "semantic-prepare": "node ./build/prepare.js",
     "docs": "npx jsdoc2md -c .jsdoc.json --files 'src/*.js'  > docs/API.md",
     "commit": "git-cz",
     "build": "wsk-builder -v",
-    "deploy": "wsk-builder -v --deploy --test -p EPSAGON_TOKEN=$EPSAGON_TOKEN"
+    "deploy": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json",
+    "deploy-ci": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci",
+    "deploy-sequences": "wsk-builder --no-build -no-hints -l latest -l major -l minor"
+  },
+  "wsk": {
+    "name": "helix-services-private/resolve-git-ref@${version}",
+    "linksPackage": "helix-services"
   },
   "repository": {
     "type": "git",
@@ -31,10 +37,10 @@
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.0",
-    "@adobe/openwhisk-action-builder": "2.1.0",
-    "@pollyjs/adapter-node-http": "2.6.2",
-    "@pollyjs/core": "2.6.2",
-    "@pollyjs/persister-fs": "2.6.2",
+    "@adobe/openwhisk-action-builder": "2.1.1",
+    "@pollyjs/adapter-node-http": "2.6.3",
+    "@pollyjs/core": "2.6.3",
+    "@pollyjs/persister-fs": "2.6.3",
     "@semantic-release/changelog": "3.0.4",
     "@semantic-release/commit-analyzer": "6.3.0",
     "@semantic-release/exec": "3.3.7",
@@ -71,10 +77,6 @@
     "ghooks": {
       "pre-commit": "npx lint-staged"
     }
-  },
-  "wsk": {
-    "name": "helix-services/resolve-git-ref@1.5.4",
-    "static": []
   },
   "statuspage": {
     "name": "Helix Git Reference Resolver",
