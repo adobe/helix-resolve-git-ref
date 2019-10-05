@@ -1,3 +1,10 @@
+## [1.5.5](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.4...v1.5.5) (2019-10-05)
+
+
+### Bug Fixes
+
+* **deploy:** use helix-services-private ([68f7c62](https://github.com/adobe/helix-resolve-git-ref/commit/68f7c62))
+
 ## [1.5.4](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.3...v1.5.4) (2019-09-30)
 
 
