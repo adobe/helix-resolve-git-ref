@@ -13,7 +13,7 @@
     "commit": "git-cz",
     "build": "wsk-builder -v",
     "deploy": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json",
-    "deploy-ci": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json --entryFile index.js --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci",
+    "deploy-ci": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci",
     "deploy-sequences": "wsk-builder --no-build -no-hints -l latest -l major -l minor"
   },
   "wsk": {
