@@ -1,3 +1,10 @@
+## [1.5.6](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.5...v1.5.6) (2019-10-05)
+
+
+### Bug Fixes
+
+* **deps:** pin dependencies ([#63](https://github.com/adobe/helix-resolve-git-ref/issues/63)) ([8f1b67e](https://github.com/adobe/helix-resolve-git-ref/commit/8f1b67e))
+
 ## [1.5.5](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.4...v1.5.5) (2019-10-05)
 
 
