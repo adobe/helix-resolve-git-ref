@@ -1,3 +1,10 @@
+## [1.5.11](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.10...v1.5.11) (2019-10-17)
+
+
+### Bug Fixes
+
+* **deps:** update any ([#74](https://github.com/adobe/helix-resolve-git-ref/issues/74)) ([5b6a429](https://github.com/adobe/helix-resolve-git-ref/commit/5b6a429))
+
 ## [1.5.10](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.9...v1.5.10) (2019-10-15)
 
 
