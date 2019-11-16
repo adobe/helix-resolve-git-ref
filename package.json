@@ -77,12 +77,5 @@
     "ghooks": {
       "pre-commit": "npx lint-staged"
     }
-  },
-  "statuspage": {
-    "name": "Helix Git Reference Resolver",
-    "group": "Delivery"
-  },
-  "newrelic": {
-    "group_policy": "Delivery Repeated Failure"
   }
 }
