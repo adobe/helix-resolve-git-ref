@@ -1,3 +1,10 @@
+## [1.5.17](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.16...v1.5.17) (2019-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v6 ([d5243aa](https://github.com/adobe/helix-resolve-git-ref/commit/d5243aa23fdc90066396a87cb9ab418aa287bfec))
+
 ## [1.5.16](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.15...v1.5.16) (2019-11-14)
 
 
