@@ -23,7 +23,7 @@ const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
 const rp = require('request-promise-native');
 const proxyquire = require('proxyquire');
-const bunyan = require('bunyan');
+const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
 
 const OWNER = 'adobe';
 const REPO = 'helix-cli';
@@ -38,6 +38,19 @@ const { main } = proxyquire('../src/index.js', {
     },
   },
 });
+
+
+function createLogger(level = 'info') {
+  const logger = new MemLogger({
+    level,
+    filter: (fields) => ({
+      ...fields,
+      timestamp: '1970-01-01T00:00:00.000Z',
+    }),
+  });
+  return new SimpleInterface({ logger });
+}
+
 
 /**
  * Checks if the specified string is a valid SHA-1 value.
@@ -169,20 +182,14 @@ describe('main tests', () => {
   });
 
   it('index function instruments epsagon', async () => {
-    const logger = bunyan.createLogger({
-      name: 'test-logger',
-      streams: [{
-        level: 'info',
-        type: 'raw',
-        stream: new bunyan.RingBuffer({ limit: 100 }),
-      }],
-    });
+    const logger = createLogger();
     await main({
       EPSAGON_TOKEN: 'foobar',
       __ow_logger: logger,
     }, logger);
 
-    assert.strictEqual(logger.streams[0].stream.records[0].msg, 'instrumenting epsagon.');
+    const output = JSON.stringify(logger.logger.buf);
+    assert.strictEqual(output, '[{"level":"info","timestamp":"1970-01-01T00:00:00.000Z","message":["instrumenting epsagon."]}]');
   });
 
   // eslint-disable-next-line func-names
