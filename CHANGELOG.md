@@ -1,3 +1,10 @@
+## [1.5.22](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.21...v1.5.22) (2019-12-15)
+
+
+### Bug Fixes
+
+* **deps:** update external ([#108](https://github.com/adobe/helix-resolve-git-ref/issues/108)) ([d8b43e7](https://github.com/adobe/helix-resolve-git-ref/commit/d8b43e7138cf036022bcd17be8bea3559a673824))
+
 ## [1.5.21](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.20...v1.5.21) (2019-12-02)
 
 
