@@ -1,3 +1,10 @@
+## [1.5.30](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.29...v1.5.30) (2020-01-24)
+
+
+### Bug Fixes
+
+* **epsagon:** use helix-epsagon wrapper ([#127](https://github.com/adobe/helix-resolve-git-ref/issues/127)) ([c4dab26](https://github.com/adobe/helix-resolve-git-ref/commit/c4dab266fc86a5abc42f14b68aab1817837c0c9a))
+
 ## [1.5.29](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.28...v1.5.29) (2020-01-23)
 
 
