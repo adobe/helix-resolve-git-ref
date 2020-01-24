@@ -5,8 +5,8 @@
   "description": "An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
   "main": "src/index.js",
   "scripts": {
-    "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 94 --statements 95 --lines 98 mocha",
-    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 94 --statements 95 --lines 98 mocha --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
+    "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 93 --statements 95 --lines 98 mocha",
+    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 93 --statements 95 --lines 98 mocha --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
     "lint": "./node_modules/.bin/eslint .",
     "semantic-release": "semantic-release",
     "docs": "npx jsdoc2md -c .jsdoc.json --files 'src/*.js'  > docs/API.md",
@@ -31,10 +31,10 @@
   },
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
+    "@adobe/helix-epsagon": "1.0.1",
     "@adobe/helix-status": "7.1.1",
-    "@adobe/openwhisk-action-utils": "4.0.0",
     "@adobe/openwhisk-action-logger": "2.0.4",
-    "epsagon": "1.48.0"
+    "@adobe/openwhisk-action-utils": "4.0.0"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.0",
