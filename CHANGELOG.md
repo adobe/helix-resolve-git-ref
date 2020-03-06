@@ -1,3 +1,10 @@
+## [1.5.41](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.40...v1.5.41) (2020-03-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-utils to v4.2.0 ([dd90e4f](https://github.com/adobe/helix-resolve-git-ref/commit/dd90e4f4aafd153fa24fba7713fcab4adc85766c))
+
 ## [1.5.40](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.39...v1.5.40) (2020-03-04)
 
 
