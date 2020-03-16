@@ -1,3 +1,10 @@
+## [1.5.45](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.44...v1.5.45) (2020-03-16)
+
+
+### Bug Fixes
+
+* **package.json:** revert to espagon v1.1.5 ([6673c50](https://github.com/adobe/helix-resolve-git-ref/commit/6673c5028374949ce648d048aa9f3913e137b561)), closes [#165](https://github.com/adobe/helix-resolve-git-ref/issues/165)
+
 ## [1.5.44](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.43...v1.5.44) (2020-03-16)
 
 
