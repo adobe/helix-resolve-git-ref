@@ -36,7 +36,7 @@ const { epsagon } = require('@adobe/helix-epsagon');
  * @returns {string} result.fqRef the fully qualified name of `ref`
  *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
  */
-function lookup(params = {}) {
+function lookup(params) {
   const {
     owner,
     repo,
@@ -96,10 +96,7 @@ function lookup(params = {}) {
       }
       let resolved = false;
       let truncatedLine = '';
-      res.on('data', (chunk) => {
-        if (resolved) {
-          return;
-        }
+      const dataHandler = (chunk) => {
         const data = truncatedLine + chunk;
         const lines = data.split('\n');
         // remember last (truncated) line; will be '' if chunk ends with '\n'
@@ -118,8 +115,10 @@ function lookup(params = {}) {
             },
           });
           resolved = true;
+          res.off('data', dataHandler);
         }
-      });
+      };
+      res.on('data', dataHandler);
       res.on('end', () => {
         if (!resolved) {
           resolve({

@@ -123,9 +123,10 @@ describe('main tests', () => {
   });
 
   it('main function resolves tag', async () => {
-    const { body: { sha: sha1, fqRef } } = await main({ owner: OWNER, repo: REPO, ref: 'v1.0.0' });
-    assert.equal(fqRef, 'refs/tags/v1.0.0');
-    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: 'refs/tags/v1.0.0' });
+    const ref = 'v1.0.0';
+    const { body: { sha: sha1, fqRef } } = await main({ owner: OWNER, repo: REPO, ref });
+    assert.equal(fqRef, `refs/tags/${ref}`);
+    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: `refs/tags/${ref}` });
     assert.equal(sha1, sha2);
   });
 
