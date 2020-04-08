@@ -1,3 +1,10 @@
+## [1.5.54](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.53...v1.5.54) (2020-04-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-epsagon to v1.2.0 ([d0869a9](https://github.com/adobe/helix-resolve-git-ref/commit/d0869a9f35becd2a8b0a15996a709eb087a187b1))
+
 ## [1.5.53](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.52...v1.5.53) (2020-04-08)
 
 
