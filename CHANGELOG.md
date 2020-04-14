@@ -1,3 +1,10 @@
+## [1.5.55](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.54...v1.5.55) (2020-04-14)
+
+
+### Bug Fixes
+
+* **deploy:** use helix-services package ([#189](https://github.com/adobe/helix-resolve-git-ref/issues/189)) ([21f810d](https://github.com/adobe/helix-resolve-git-ref/commit/21f810d8f5999645cc80c638df1ba74edf9ccd6e))
+
 ## [1.5.54](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.53...v1.5.54) (2020-04-08)
 
 
