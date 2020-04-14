@@ -17,8 +17,7 @@
     "deploy-sequences": "wsk-builder --no-build -no-hints -l latest -l major -l minor"
   },
   "wsk": {
-    "name": "helix-services-private/resolve-git-ref@${version}",
-    "linksPackage": "helix-services"
+    "name": "helix-services/resolve-git-ref@${version}"
   },
   "repository": {
     "type": "git",
