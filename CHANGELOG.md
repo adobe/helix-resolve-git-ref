@@ -1,3 +1,10 @@
+## [1.5.63](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.62...v1.5.63) (2020-06-02)
+
+
+### Bug Fixes
+
+* **deps:** update [@adobe](https://github.com/adobe) ([517dab3](https://github.com/adobe/helix-resolve-git-ref/commit/517dab35b717df98b8a890d6d15e223bf7cb49d4))
+
 ## [1.5.62](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.61...v1.5.62) (2020-06-01)
 
 
