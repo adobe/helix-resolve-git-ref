@@ -39,7 +39,6 @@ const { main } = proxyquire('../src/index.js', {
   },
 });
 
-
 function createLogger(level = 'info') {
   const logger = new MemLogger({
     level,
@@ -50,7 +49,6 @@ function createLogger(level = 'info') {
   });
   return new SimpleInterface({ logger });
 }
-
 
 /**
  * Checks if the specified string is a valid SHA-1 value.
