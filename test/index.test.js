@@ -24,6 +24,7 @@ const nock = require('nock');
 const rp = require('request-promise-native');
 const proxyquire = require('proxyquire');
 const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
+const pkgJson = require('../package.json');
 
 const OWNER = 'adobe';
 const REPO = 'helix-cli';
@@ -174,10 +175,18 @@ describe('main tests', () => {
     assert.equal(fqRef, FULL_REF);
   });
 
-  it('main() with path /_status_check/pingdom.xml reports status', async () => {
-    const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/pingdom.xml' });
+  it('main() with path /_status_check/healthcheck.json reports status', async () => {
+    const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/healthcheck.json' });
     assert.equal(res.statusCode, 200);
-    assert.equal(res.body.split('\n')[0], '<pingdom_http_custom_check><status>OK</status>');
+    assert.ok(res.body.github);
+    delete res.body.github;
+    assert.ok(res.body.response_time);
+    delete res.body.response_time;
+    delete res.body.process;
+    assert.deepEqual(res.body, {
+      status: 'OK',
+      version: pkgJson.version,
+    });
   });
 
   it('index function instruments epsagon', async () => {
