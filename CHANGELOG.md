@@ -1,3 +1,10 @@
+## [1.5.75](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.74...v1.5.75) (2020-07-02)
+
+
+### Bug Fixes
+
+* **deps:** update minor ([e0cb102](https://github.com/adobe/helix-resolve-git-ref/commit/e0cb10246e12ca4264236c461e84325416d19748))
+
 ## [1.5.74](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.73...v1.5.74) (2020-07-02)
 
 
