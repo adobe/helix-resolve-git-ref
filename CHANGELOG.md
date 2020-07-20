@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.75...v1.6.0) (2020-07-20)
+
+
+### Features
+
+* rename default branch from "master" to "main" ([8d3f6dc](https://github.com/adobe/helix-resolve-git-ref/commit/8d3f6dcc7818575abb8391af65a3550ef7f67caf)), closes [#249](https://github.com/adobe/helix-resolve-git-ref/issues/249)
+
 ## [1.5.75](https://github.com/adobe/helix-resolve-git-ref/compare/v1.5.74...v1.5.75) (2020-07-02)
 
 
