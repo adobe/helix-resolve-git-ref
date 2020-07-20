@@ -29,10 +29,10 @@ const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
 const pkgJson = require('../package.json');
 
 const OWNER = 'adobe';
-const REPO = 'helix-cli';
+const REPO = 'helix-resolve-git-ref';
 const PRIVATE_REPO = 'project-helix';
-const SHORT_REF = 'master';
-const FULL_REF = 'refs/heads/master';
+const SHORT_REF = 'main';
+const FULL_REF = 'refs/heads/main';
 
 const { main } = proxyquire('../src/index.js', {
   epsagon: {
@@ -105,10 +105,10 @@ describe('main tests', () => {
     assert.equal(statusCode, 400);
   });
 
-  it('ref param is optional with default: master', async () => {
+  it('ref param is optional with default: main', async () => {
     const { statusCode, body: { fqRef } } = await main({ owner: OWNER, repo: REPO });
     assert.equal(statusCode, 200);
-    assert.equal(fqRef, 'refs/heads/master');
+    assert.equal(fqRef, 'refs/heads/main');
   });
 
   it('main function returns valid sha format', async () => {

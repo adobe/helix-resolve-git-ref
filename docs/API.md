@@ -34,7 +34,7 @@ either via `x-github-token` header or `GITHUB_TOKEN` action parameter.
 | params | <code>Object</code> |  | The OpenWhisk parameters |
 | params.owner | <code>string</code> |  | GitHub organization or user |
 | params.repo | <code>string</code> |  | GitHub repository name |
-| [params.ref] | <code>string</code> | <code>&quot;master&quot;</code> | git reference (branch or tag name) |
+| [params.ref] | <code>string</code> | <code>&quot;main&quot;</code> | git reference (branch or tag name) |
 | params.__ow_headers | <code>Object</code> |  | The request headers of this web action invokation |
 
 <a name="run"></a>
