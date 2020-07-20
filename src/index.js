@@ -29,7 +29,7 @@ const { epsagon } = require('@adobe/helix-epsagon');
  * @param {Object} params The OpenWhisk parameters
  * @param {string} params.owner GitHub organization or user
  * @param {string} params.repo GitHub repository name
- * @param {string} [params.ref=master] git reference (branch or tag name)
+ * @param {string} [params.ref=main] git reference (branch or tag name)
  * @param {Object} params.__ow_headers The request headers of this web action invokation
  * @returns {Promise<object>} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
@@ -40,7 +40,7 @@ function lookup(params) {
   const {
     owner,
     repo,
-    ref = 'master',
+    ref = 'main',
     __ow_headers = {},
   } = params;
 
@@ -90,7 +90,7 @@ function lookup(params) {
         // full ref name (e.g. 'refs/tags/v0.1.2')
         searchTerms.push(ref);
       } else {
-        // short ref name, potentially ambiguous (e.g. 'master', 'v0.1.2')
+        // short ref name, potentially ambiguous (e.g. 'main', 'v0.1.2')
         searchTerms.push(`refs/heads/${ref}`);
         searchTerms.push(`refs/tags/${ref}`);
       }
