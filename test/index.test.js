@@ -23,9 +23,9 @@ const NodeHttpAdapter = require('@pollyjs/adapter-node-http');
 const FSPersister = require('@pollyjs/persister-fs');
 const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
-const rp = require('request-promise-native');
 const proxyquire = require('proxyquire');
 const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
+const { fetch, disconnectAll } = require('@adobe/helix-fetch').context({ httpsProtocols: ['http1'] });
 const pkgJson = require('../package.json');
 
 const OWNER = 'adobe';
@@ -133,16 +133,15 @@ describe('main tests', () => {
 
   it('main function returns correct sha', async () => {
     const { body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    const options = {
-      uri: `https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`,
-      headers: {
-        'User-Agent': 'Request-Promise',
-      },
-      json: true,
-    };
-    const { commit } = await rp(options);
-    assert.ok(commit);
-    assert.equal(commit.sha, sha);
+    try {
+      const resp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`);
+      assert.ok(resp.ok);
+      const { commit } = await resp.json();
+      assert.ok(commit);
+      assert.equal(commit.sha, sha);
+    } finally {
+      await disconnectAll();
+    }
   });
 
   it('main function returns 404 for non-existing ref', async () => {
