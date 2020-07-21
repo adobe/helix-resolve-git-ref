@@ -69,8 +69,8 @@ function isValidSha(str) {
 
 describe('main tests', () => {
   setupPolly({
-    recordFailedRequests: true,
-    recordIfMissing: true,
+    recordFailedRequests: false,
+    recordIfMissing: false,
     matchRequestsBy: {
       headers: {
         exclude: ['authorization', 'User-Agent'],
