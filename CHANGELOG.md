@@ -1,3 +1,11 @@
+## [1.6.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.6.1...v1.6.2) (2020-07-21)
+
+
+### Bug Fixes
+
+* **release:** fix config ([525384c](https://github.com/adobe/helix-resolve-git-ref/commit/525384cf796b9346f567192ce69ff70402de516a))
+* **release:** fix config ([1afa2a1](https://github.com/adobe/helix-resolve-git-ref/commit/1afa2a108dc5556ab18efde0eb21797f8d480e5c))
+
 ## [1.6.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.6.0...v1.6.1) (2020-07-21)
 
 
