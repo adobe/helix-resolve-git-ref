@@ -19,6 +19,8 @@ const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap } = require('@adobe/openwhisk-action-utils');
 const { epsagon } = require('@adobe/helix-epsagon');
 
+const DEFAULT_BRANCH_RE = /symref=HEAD:(\S+)/;
+
 /**
  * This is the main function. It resolves the specified reference to the corresponding
  * sha of the HEAD commit at `ref`.
@@ -29,7 +31,7 @@ const { epsagon } = require('@adobe/helix-epsagon');
  * @param {Object} params The OpenWhisk parameters
  * @param {string} params.owner GitHub organization or user
  * @param {string} params.repo GitHub repository name
- * @param {string} [params.ref=main] git reference (branch or tag name)
+ * @param {string} [params.ref=<default branch>] git reference (branch or tag name)
  * @param {Object} params.__ow_headers The request headers of this web action invokation
  * @returns {Promise<object>} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
@@ -40,7 +42,7 @@ function lookup(params) {
   const {
     owner,
     repo,
-    ref = 'main',
+    ref,
     __ow_headers = {},
   } = params;
 
@@ -86,21 +88,32 @@ function lookup(params) {
       }
       res.setEncoding('utf8');
       const searchTerms = [];
-      if (ref.startsWith('refs/')) {
-        // full ref name (e.g. 'refs/tags/v0.1.2')
-        searchTerms.push(ref);
-      } else {
-        // short ref name, potentially ambiguous (e.g. 'main', 'v0.1.2')
-        searchTerms.push(`refs/heads/${ref}`);
-        searchTerms.push(`refs/tags/${ref}`);
+      if (ref) {
+        if (ref.startsWith('refs/')) {
+          // full ref name (e.g. 'refs/tags/v0.1.2')
+          searchTerms.push(ref);
+        } else {
+          // short ref name, potentially ambiguous (e.g. 'main', 'v0.1.2')
+          searchTerms.push(`refs/heads/${ref}`);
+          searchTerms.push(`refs/tags/${ref}`);
+        }
       }
       let resolved = false;
       let truncatedLine = '';
+      let initialChunk = true;
       const dataHandler = (chunk) => {
         const data = truncatedLine + chunk;
         const lines = data.split('\n');
         // remember last (truncated) line; will be '' if chunk ends with '\n'
         truncatedLine = lines.pop();
+        /* istanbul ignore else */
+        if (initialChunk) {
+          if (!ref) {
+            // extract default branch from 2nd protocol line
+            searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
+          }
+          initialChunk = false;
+        }
         const result = lines.filter((row) => {
           const parts = row.split(' ');
           return parts.length === 2 && searchTerms.includes(parts[1]);
