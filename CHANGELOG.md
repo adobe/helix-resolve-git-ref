@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.6.2...v1.7.0) (2020-07-22)
+
+
+### Features
+
+* use default branch as fallback instead of hardcoded branch (main or master) ([be2f4f8](https://github.com/adobe/helix-resolve-git-ref/commit/be2f4f87d5a509c9a27456dc23c8bc889ac51fd8)), closes [#253](https://github.com/adobe/helix-resolve-git-ref/issues/253)
+
 ## [1.6.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.6.1...v1.6.2) (2020-07-21)
 
 
