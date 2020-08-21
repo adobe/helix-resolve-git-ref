@@ -103,10 +103,10 @@ workflows:
           - build
         filters:
           branches:
-            ignore: master
+            ignore: main
     - semantic-release:
         requires:
         - build
         filters:
           branches:
-            only: master
+            only: main

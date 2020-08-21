@@ -14,8 +14,12 @@
 
 const https = require('https');
 
-const { wrap } = require('@adobe/helix-status');
-const { logger } = require('@adobe/openwhisk-action-utils');
+const { wrap: helixStatus } = require('@adobe/helix-status');
+const { logger } = require('@adobe/openwhisk-action-logger');
+const { wrap } = require('@adobe/openwhisk-action-utils');
+const { epsagon } = require('@adobe/helix-epsagon');
+
+const DEFAULT_BRANCH_RE = /symref=HEAD:(\S+)/;
 
 /**
  * This is the main function. It resolves the specified reference to the corresponding
@@ -27,18 +31,18 @@ const { logger } = require('@adobe/openwhisk-action-utils');
  * @param {Object} params The OpenWhisk parameters
  * @param {string} params.owner GitHub organization or user
  * @param {string} params.repo GitHub repository name
- * @param {string} [params.ref=master] git reference (branch or tag name)
+ * @param {string} [params.ref=<default branch>] git reference (branch or tag name)
  * @param {Object} params.__ow_headers The request headers of this web action invokation
  * @returns {Promise<object>} result
  * @returns {string} result.sha the sha of the HEAD commit at `ref`
  * @returns {string} result.fqRef the fully qualified name of `ref`
  *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
  */
-function lookup(params = {}) {
+function lookup(params) {
   const {
     owner,
     repo,
-    ref = 'master',
+    ref,
     __ow_headers = {},
   } = params;
 
@@ -84,24 +88,32 @@ function lookup(params = {}) {
       }
       res.setEncoding('utf8');
       const searchTerms = [];
-      if (ref.startsWith('refs/')) {
-        // full ref name (e.g. 'refs/tags/v0.1.2')
-        searchTerms.push(ref);
-      } else {
-        // short ref name, potentially ambiguous (e.g. 'master', 'v0.1.2')
-        searchTerms.push(`refs/heads/${ref}`);
-        searchTerms.push(`refs/tags/${ref}`);
+      if (ref) {
+        if (ref.startsWith('refs/')) {
+          // full ref name (e.g. 'refs/tags/v0.1.2')
+          searchTerms.push(ref);
+        } else {
+          // short ref name, potentially ambiguous (e.g. 'main', 'v0.1.2')
+          searchTerms.push(`refs/heads/${ref}`);
+          searchTerms.push(`refs/tags/${ref}`);
+        }
       }
       let resolved = false;
       let truncatedLine = '';
-      res.on('data', (chunk) => {
-        if (resolved) {
-          return;
-        }
+      let initialChunk = true;
+      const dataHandler = (chunk) => {
         const data = truncatedLine + chunk;
         const lines = data.split('\n');
         // remember last (truncated) line; will be '' if chunk ends with '\n'
         truncatedLine = lines.pop();
+        /* istanbul ignore else */
+        if (initialChunk) {
+          if (!ref) {
+            // extract default branch from 2nd protocol line
+            searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
+          }
+          initialChunk = false;
+        }
         const result = lines.filter((row) => {
           const parts = row.split(' ');
           return parts.length === 2 && searchTerms.includes(parts[1]);
@@ -116,8 +128,10 @@ function lookup(params = {}) {
             },
           });
           resolved = true;
+          res.off('data', dataHandler);
         }
-      });
+      };
+      res.on('data', dataHandler);
       res.on('end', () => {
         if (!resolved) {
           resolve({
@@ -137,39 +151,12 @@ function lookup(params = {}) {
 }
 
 /**
- * Runs the action by wrapping the `lookup` function with the pingdom-status utility.
- * Additionally, if a EPSAGON_TOKEN is configured, the epsagon tracers are instrumented.
- * @param params Action params
- * @returns {Promise<*>} The response
- */
-async function run(params) {
-  const { __ow_logger: log } = params;
-  let action = lookup;
-  if (params && params.EPSAGON_TOKEN) {
-    // ensure that epsagon is only required, if a token is present. this is to avoid invoking their
-    // patchers otherwise.
-    // eslint-disable-next-line global-require
-    const { openWhiskWrapper } = require('epsagon');
-    log.info('instrumenting epsagon.');
-    action = openWhiskWrapper(action, {
-      token_param: 'EPSAGON_TOKEN',
-      appName: 'Helix Services',
-      metadataOnly: false, // Optional, send more trace data,
-      ignoredKeys: [/[A-Z0-9_]+/],
-    });
-  }
-  return wrap(action, {
-    github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack',
-  })(params);
-}
-
-/**
  * Main function called by the openwhisk invoker.
  * @param params Action params
  * @returns {Promise<*>} The response
  */
-async function main(params) {
-  return logger.wrap(run, params);
-}
-
-module.exports.main = main;
+module.exports.main = wrap(lookup)
+  .with(epsagon)
+  .with(helixStatus, { github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack' })
+  .with(logger.trace)
+  .with(logger);

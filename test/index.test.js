@@ -14,6 +14,8 @@
 
 'use strict';
 
+process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
+
 const assert = require('assert');
 const path = require('path');
 
@@ -21,15 +23,16 @@ const NodeHttpAdapter = require('@pollyjs/adapter-node-http');
 const FSPersister = require('@pollyjs/persister-fs');
 const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
-const rp = require('request-promise-native');
 const proxyquire = require('proxyquire');
-const bunyan = require('bunyan');
+const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
+const { fetch, disconnectAll } = require('@adobe/helix-fetch').context({ httpsProtocols: ['http1'] });
+const pkgJson = require('../package.json');
 
 const OWNER = 'adobe';
-const REPO = 'helix-cli';
+const REPO = 'helix-resolve-git-ref';
 const PRIVATE_REPO = 'project-helix';
-const SHORT_REF = 'master';
-const FULL_REF = 'refs/heads/master';
+const SHORT_REF = 'main';
+const FULL_REF = 'refs/heads/main';
 
 const { main } = proxyquire('../src/index.js', {
   epsagon: {
@@ -38,6 +41,17 @@ const { main } = proxyquire('../src/index.js', {
     },
   },
 });
+
+function createLogger(level = 'info') {
+  const logger = new MemLogger({
+    level,
+    filter: (fields) => ({
+      ...fields,
+      timestamp: '1970-01-01T00:00:00.000Z',
+    }),
+  });
+  return new SimpleInterface({ logger });
+}
 
 /**
  * Checks if the specified string is a valid SHA-1 value.
@@ -91,10 +105,10 @@ describe('main tests', () => {
     assert.equal(statusCode, 400);
   });
 
-  it('ref param is optional with default: master', async () => {
+  it('ref param is optional (fallback: default branch)', async () => {
     const { statusCode, body: { fqRef } } = await main({ owner: OWNER, repo: REPO });
     assert.equal(statusCode, 200);
-    assert.equal(fqRef, 'refs/heads/master');
+    assert.equal(fqRef, 'refs/heads/main');
   });
 
   it('main function returns valid sha format', async () => {
@@ -110,24 +124,24 @@ describe('main tests', () => {
   });
 
   it('main function resolves tag', async () => {
-    const { body: { sha: sha1, fqRef } } = await main({ owner: OWNER, repo: REPO, ref: 'v1.0.0' });
-    assert.equal(fqRef, 'refs/tags/v1.0.0');
-    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: 'refs/tags/v1.0.0' });
+    const ref = 'v1.0.0';
+    const { body: { sha: sha1, fqRef } } = await main({ owner: OWNER, repo: REPO, ref });
+    assert.equal(fqRef, `refs/tags/${ref}`);
+    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: `refs/tags/${ref}` });
     assert.equal(sha1, sha2);
   });
 
   it('main function returns correct sha', async () => {
     const { body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    const options = {
-      uri: `https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`,
-      headers: {
-        'User-Agent': 'Request-Promise',
-      },
-      json: true,
-    };
-    const { commit } = await rp(options);
-    assert.ok(commit);
-    assert.equal(commit.sha, sha);
+    try {
+      const resp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`);
+      assert.ok(resp.ok);
+      const { commit } = await resp.json();
+      assert.ok(commit);
+      assert.equal(commit.sha, sha);
+    } finally {
+      await disconnectAll();
+    }
   });
 
   it('main function returns 404 for non-existing ref', async () => {
@@ -162,27 +176,29 @@ describe('main tests', () => {
     assert.equal(fqRef, FULL_REF);
   });
 
-  it('main() with path /_status_check/pingdom.xml reports status', async () => {
-    const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/pingdom.xml' });
+  it('main() with path /_status_check/healthcheck.json reports status', async () => {
+    const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/healthcheck.json' });
     assert.equal(res.statusCode, 200);
-    assert.equal(res.body.split('\n')[0], '<pingdom_http_custom_check><status>OK</status>');
+    assert.ok(res.body.github);
+    delete res.body.github;
+    assert.ok(res.body.response_time);
+    delete res.body.response_time;
+    delete res.body.process;
+    assert.deepEqual(res.body, {
+      status: 'OK',
+      version: pkgJson.version,
+    });
   });
 
   it('index function instruments epsagon', async () => {
-    const logger = bunyan.createLogger({
-      name: 'test-logger',
-      streams: [{
-        level: 'info',
-        type: 'raw',
-        stream: new bunyan.RingBuffer({ limit: 100 }),
-      }],
-    });
+    const logger = createLogger();
     await main({
       EPSAGON_TOKEN: 'foobar',
       __ow_logger: logger,
     }, logger);
 
-    assert.strictEqual(logger.streams[0].stream.records[0].msg, 'instrumenting epsagon.');
+    const output = JSON.stringify(logger.logger.buf);
+    assert.strictEqual(output, '[{"level":"info","timestamp":"1970-01-01T00:00:00.000Z","message":["instrumenting epsagon."]}]');
   });
 
   // eslint-disable-next-line func-names

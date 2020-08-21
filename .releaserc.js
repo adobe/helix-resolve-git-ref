@@ -5,7 +5,7 @@ module.exports = {
     ['@semantic-release/changelog', {
       changelogFile: 'CHANGELOG.md',
     }],
-    ["@semantic-release/npm", {
+    ['@semantic-release/npm', {
       npmPublish: false,
     }],
     ['@semantic-release/git', {
@@ -17,5 +17,5 @@ module.exports = {
     }],
     '@semantic-release/github',
   ],
-  branch: 'master'
+  branches: ['main']
 };
