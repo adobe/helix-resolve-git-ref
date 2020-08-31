@@ -190,15 +190,19 @@ describe('main tests', () => {
     });
   });
 
-  it('index function instruments epsagon', async () => {
+  it('index function instruments epsagon', async function test() {
+    const { server } = this.polly;
+    server.any().intercept((req, res) => {
+      res.status(200);
+    });
     const logger = createLogger();
     await main({
       EPSAGON_TOKEN: 'foobar',
       __ow_logger: logger,
     }, logger);
 
-    const output = JSON.stringify(logger.logger.buf);
-    assert.strictEqual(output, '[{"level":"info","timestamp":"1970-01-01T00:00:00.000Z","message":["instrumenting epsagon."]}]');
+    const output = JSON.stringify(logger.logger.buf[0]);
+    assert.strictEqual(output, '{"level":"info","timestamp":"1970-01-01T00:00:00.000Z","message":["instrumenting epsagon."]}');
   });
 
   // eslint-disable-next-line func-names
