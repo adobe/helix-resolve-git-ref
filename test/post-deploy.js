@@ -49,3 +49,22 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
       });
   }).timeout(10000);
 });
+
+describe('Post-Deploy Tests on Preprod #online #postdeploy', () => {
+  it('correct sha is returned', async () => {
+    let url;
+
+    await chai
+      .request('https://preprod.adobeioruntime.net/')
+      .get(`${getbaseurl()}?owner=adobe&repo=helix-resolve-git-ref&ref=v1.7.8`)
+      .then((response) => {
+        url = response.request.url;
+
+        expect(response).to.have.status(200);
+        expect(response).to.be.json;
+      }).catch((e) => {
+        e.message = `At ${url}\n      ${e.message}`;
+        throw e;
+      });
+  }).timeout(60000);
+});
