@@ -4,9 +4,10 @@
   "private": true,
   "description": "An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
   "main": "src/index.js",
-  "scripts": {
-    "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha",
-    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
+  "scripts": {  
+    "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha  -i -g 'Post-Deploy'",
+    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha  -i -g 'Post-Deploy' --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
+    "test-postdeploy": "mocha --reporter xunit --reporter-options output=./junit/test-results.xml -g 'Post-Deploy'",
     "lint": "./node_modules/.bin/eslint .",
     "semantic-release": "semantic-release",
     "docs": "npx jsdoc2md -c .jsdoc.json --files 'src/*.js'  > docs/API.md",
@@ -47,6 +48,8 @@
     "@semantic-release/changelog": "5.0.1",
     "@semantic-release/exec": "5.0.0",
     "@semantic-release/git": "9.0.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "codecov": "3.7.2",
     "commitizen": "4.2.1",
     "cz-conventional-changelog": "3.3.0",
