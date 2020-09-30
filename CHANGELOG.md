@@ -1,3 +1,10 @@
+## [1.7.9](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.8...v1.7.9) (2020-09-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-status to v8.2.1 ([2f7c4bd](https://github.com/adobe/helix-resolve-git-ref/commit/2f7c4bd024aa0501215d04cd52e3866f91f67eda))
+
 ## [1.7.8](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.7...v1.7.8) (2020-09-28)
 
 
