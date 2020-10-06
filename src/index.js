@@ -66,6 +66,8 @@ function lookup(params) {
       options.auth = `any_user:${githubToken}`;
     }
 
+    console.log('lookup started');
+
     https.get(options, (res) => {
       const { statusCode, statusMessage } = res;
       if (statusCode !== 200) {
@@ -109,6 +111,7 @@ function lookup(params) {
         /* istanbul ignore else */
         if (initialChunk) {
           if (!ref) {
+            console.log('using fallback');
             // extract default branch from 2nd protocol line
             searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
           }

@@ -112,7 +112,9 @@ describe('main tests', () => {
   });
 
   it('ref param is optional (fallback: default branch) for test repo', async () => {
-    const { statusCode, body: { fqRef } } = await main({ owner: 'trieloff', repo: 'test' });
+    const result = await main({ owner: 'trieloff', repo: 'test' });
+    const { statusCode, body: { fqRef } } = result;
+    console.log(result);
     assert.equal(statusCode, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
