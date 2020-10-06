@@ -70,7 +70,7 @@ function isValidSha(str) {
 describe('main tests', () => {
   setupPolly({
     recordFailedRequests: false,
-    recordIfMissing: false,
+    recordIfMissing: true,
     matchRequestsBy: {
       headers: {
         exclude: ['authorization', 'User-Agent'],
@@ -107,6 +107,12 @@ describe('main tests', () => {
 
   it('ref param is optional (fallback: default branch)', async () => {
     const { statusCode, body: { fqRef } } = await main({ owner: OWNER, repo: REPO });
+    assert.equal(statusCode, 200);
+    assert.equal(fqRef, 'refs/heads/main');
+  });
+
+  it('ref param is optional (fallback: default branch) for test repo', async () => {
+    const { statusCode, body: { fqRef } } = await main({ owner: 'trieloff', repo: 'test' });
     assert.equal(statusCode, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
