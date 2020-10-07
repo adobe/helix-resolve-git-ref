@@ -119,7 +119,7 @@ function lookup(params) {
               console.log(err);
               resolve({
                 statusCode: 500,
-                body: `failed to fetch git repo info:\n${String(err.stack)}`,
+                body: `failed to fetch git repo info:\n${String(err.stack)}\n${data}`,
               });
             }
           }
