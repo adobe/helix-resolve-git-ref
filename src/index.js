@@ -112,8 +112,16 @@ function lookup(params) {
         if (initialChunk) {
           if (!ref) {
             console.log('using fallback');
-            // extract default branch from 2nd protocol line
-            searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
+            try {
+              // extract default branch from 2nd protocol line
+              searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
+            } catch (err) {
+              console.log(err);
+              resolve({
+                statusCode: 500,
+                body: `failed to fetch git repo info:\n${String(err.stack)}`,
+              });
+            }
           }
           initialChunk = false;
         }
