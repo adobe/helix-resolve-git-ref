@@ -115,7 +115,7 @@ function lookup(params) {
             try {
               // extract default branch from 2nd protocol line
               searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
-            } catch (err) {
+            } catch (err) /* istanbul ignore next */ {
               console.log(err);
               resolve({
                 statusCode: 500,
