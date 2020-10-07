@@ -66,8 +66,6 @@ function lookup(params) {
       options.auth = `any_user:${githubToken}`;
     }
 
-    console.log('lookup started');
-
     https.get(options, (res) => {
       const { statusCode, statusMessage } = res;
       if (statusCode !== 200) {
@@ -102,28 +100,31 @@ function lookup(params) {
       }
       let resolved = false;
       let truncatedLine = '';
-      let initialChunk = true;
+      // header consists of the first 2 lines in the payload
+      const header = [];
+      let processedHeader = false;
       const dataHandler = (chunk) => {
         const data = truncatedLine + chunk;
         const lines = data.split('\n');
         // remember last (truncated) line; will be '' if chunk ends with '\n'
         truncatedLine = lines.pop();
+        while (header.length < 2 && lines.length) {
+          header.push(lines.shift());
+        }
+        /* istanbul ignore if */
+        if (header.length < 2) {
+          // need to read past initial 2 header lines
+          // wait for next chunk
+          return;
+        }
         /* istanbul ignore else */
-        if (initialChunk) {
+        if (!processedHeader) {
+          // need to do this only once
+          processedHeader = true;
           if (!ref) {
-            console.log('using fallback');
-            try {
-              // extract default branch from 2nd protocol line
-              searchTerms.push(lines[1].match(DEFAULT_BRANCH_RE)[1]);
-            } catch (err) /* istanbul ignore next */ {
-              console.log(err);
-              resolve({
-                statusCode: 500,
-                body: `failed to fetch git repo info:\n${String(err.stack)}\n${data}`,
-              });
-            }
+            // extract default branch from 2nd header line
+            searchTerms.push(header[1].match(DEFAULT_BRANCH_RE)[1]);
           }
-          initialChunk = false;
         }
         const result = lines.filter((row) => {
           const parts = row.split(' ');
