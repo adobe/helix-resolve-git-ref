@@ -111,6 +111,14 @@ describe('main tests', () => {
     assert.equal(fqRef, 'refs/heads/main');
   });
 
+  it('ref param is optional (fallback: default branch) for test repo', async () => {
+    const result = await main({ owner: 'trieloff', repo: 'test' });
+    const { statusCode, body: { fqRef } } = result;
+    console.log(result);
+    assert.equal(statusCode, 200);
+    assert.equal(fqRef, 'refs/heads/main');
+  });
+
   it('main function returns valid sha format', async () => {
     const { statusCode, body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
     assert.equal(statusCode, 200);

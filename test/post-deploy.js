@@ -48,6 +48,23 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
         throw e;
       });
   }).timeout(10000);
+
+  it('correct sha is returned when no ref has been set', async () => {
+    let url;
+
+    await chai
+      .request('https://adobeioruntime.net/')
+      .get(`${getbaseurl()}?owner=trieloff&repo=test`)
+      .then((response) => {
+        url = response.request.url;
+
+        expect(response).to.have.status(200);
+        expect(response).to.be.json;
+      }).catch((e) => {
+        e.message = `At ${url}\n      ${e.message}`;
+        throw e;
+      });
+  }).timeout(10000);
 });
 
 describe('Post-Deploy Tests on Preprod #online #postdeploy', () => {
