@@ -1,4 +1,4 @@
-import { Request,  Response, Fastly } from "@fastly/as-compute";
+import { Request,  Response, Fastly, Headers } from "@fastly/as-compute";
 
 // The name of a backend server associated with this service.
 //
@@ -8,6 +8,23 @@ const BACKEND_NAME = "backend_name";
 
 /// The name of a second backend associated with this service.
 const OTHER_BACKEND_NAME = "other_backend_name";
+
+function getQueryParam(qs: string, param: string): string {
+    const pairs = qs.split("&");
+    for (let i = 0; i < pairs.length; i++) {
+        if (pairs[i].indexOf(param + "=")==0) {
+            return pairs[i].substr(param.length + 1);
+        }
+    }
+    return "";
+}
+
+function getQueryString(path: string):string {
+    if (path.indexOf("?") > 0) {
+        return path.substring(path.indexOf("?") + 1);
+    }
+    return "";
+}
 
 // The entry point for your application.
 //
@@ -30,42 +47,47 @@ function main(req: Request): Response {
     let method = req.method();
     let urlParts = req.url().split("//").pop().split("/");
     let host = urlParts.shift();
-    let path = "/" + urlParts.join("/");
+    let path = ("/" + urlParts.join("/"));
+    let qs = getQueryString(path);
 
-    // If request is a `GET` to the `/` path, send a default response.
-    if (method == "GET" && path == "/") {
-        return new Response(String.UTF8.encode("Welcome to Fastly Compute@Edge!"), {
-          status: 200,
-        });
-    }
+    const owner = getQueryParam(qs, "owner");
+    const repo = getQueryParam(qs, "repo"); 
+    let ref = getQueryParam(qs, "ref");
+    let sha = "";
 
-    // If request is a `GET` to the `/backend` path, send to a named backend.
-    if (method == "GET" && path == "/backend") {
-        // Request handling logic could go here...
-        // E.g., send the request to an origin backend and then cache the
-        // response for one minute.
+    if (owner != "" && repo != "" && true) {
         let cacheOverride = new Fastly.CacheOverride();
         cacheOverride.setTTL(60);
-        return Fastly.fetch(req, {
-            backend: BACKEND_NAME,
+
+        const myreq = new Request("https://github.com/" + owner + "/" + repo + ".git/info/refs?service=git-upload-pack", {});
+
+        const myresp = Fastly.fetch(myreq, {
+            backend: "GitHub",
             cacheOverride,
         }).wait();
+
+        const lines = myresp.text().split("\n");
+        for (let i = 0; i < lines.length; i++) {
+            if (ref == "" && lines[i].indexOf("symref=HEAD:") > 0) {
+                let refline = lines[i].substr(lines[i].indexOf("symref=HEAD:") + 23);
+                ref = refline.substr(0, refline.indexOf(" "));
+            }
+            if (ref != "" && sha == "" && lines[i].indexOf(" refs/heads/" + ref) > 0) {
+                sha = lines[i].substr(0, lines[i].indexOf(" refs/heads/" + ref));
+            }
+        }
+
+        const myheaders = new Headers();
+        myheaders.set("Content-Type", "application/json");
+
+        return new Response(String.UTF8.encode('{ "owner": "' + owner + '", "repo": "' + repo + '", "ref": "' + ref + '", "sha": "' + sha + '"  }'), {
+            status: 200,
+            headers: myheaders
+          });
     }
 
-    // If request is a `GET` to a path starting with `/other/`.
-    if (method == "GET" && path.startsWith("/other/")) {
-        // Send request to a different backend and don't cache response.
-        let cacheOverride = new Fastly.CacheOverride();
-        cacheOverride.setPass();
-        return Fastly.fetch(req, {
-            backend: OTHER_BACKEND_NAME,
-            cacheOverride,
-        }).wait();
-    }
-
-    // Catch all other requests and return a 404.
-    return new Response(String.UTF8.encode("The page you requested could not be found"), {
-        status: 200,
+    return new Response(String.UTF8.encode('Specify owner and repo, please.'), {
+        status: 400
     });
 }
 

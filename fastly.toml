@@ -1,4 +1,4 @@
-version = 1
+version = 30
 name = "helix-resolve-git-ref"
 description = "Get to know the Fastly Compute@Edge environment with a basic starter that demonstrates routing, simple synthetic responses and overriding caching rules."
 authors = ["trieloff@adobe.com"]
