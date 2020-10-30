@@ -1,79 +1,28 @@
 {
-  "name": "@adobe/helix-resolve-git-ref",
-  "version": "1.7.10",
-  "private": true,
-  "description": "An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
-  "main": "src/index.js",
-  "scripts": {
-    "test": " nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha  -i -g 'Post-Deploy'",
-    "test-ci": "nyc --reporter=text --reporter=lcov --check-coverage --branches 100 --statements 100 --lines 100 mocha  -i -g 'Post-Deploy' --reporter xunit --reporter-options output=./junit/test-results.xml && codecov",
-    "test-postdeploy": "mocha --reporter xunit --reporter-options output=./junit/test-results.xml -g 'Post-Deploy'",
-    "lint": "./node_modules/.bin/eslint .",
-    "semantic-release": "semantic-release",
-    "docs": "npx jsdoc2md -c .jsdoc.json --files 'src/*.js'  > docs/API.md",
-    "commit": "git-cz",
-    "build": "wsk-builder -v",
-    "deploy": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json",
-    "deploy-ci": "wsk-builder -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci",
-    "deploy-sequences": "wsk-builder --no-build -no-hints -l latest -l major -l minor"
-  },
-  "wsk": {
-    "namespace": "helix",
-    "name": "helix-services/resolve-git-ref@${version}"
-  },
+  "name": "compute-starter-kit-assemblyscript-default",
+  "version": "1.0.0",
+  "description": "Default package starter kit for AssemblyScript based Compute@Edge projects",
+  "main": "src/index.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adobe/helix-resolve-git-ref.git"
+    "url": "git+https://github.com/fastly/compute-starter-kit-assemblyscript-default.git"
   },
-  "author": "",
-  "license": "Apache-2.0",
+  "keywords": [],
+  "author": "oss@fastly.com",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/adobe/helix-resolve-git-ref/issues"
+    "url": "https://github.com/fastly/compute-starter-kit-assemblyscript-default/issues"
   },
-  "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
-  "dependencies": {
-    "@adobe/helix-epsagon": "1.5.3",
-    "@adobe/helix-status": "8.2.1",
-    "@adobe/openwhisk-action-logger": "2.2.1",
-    "@adobe/openwhisk-action-utils": "4.3.1"
-  },
+  "homepage": "https://github.com/fastly/compute-starter-kit-assemblyscript-default#readme",
   "devDependencies": {
-    "@adobe/eslint-config-helix": "1.1.3",
-    "@adobe/helix-fetch": "1.9.1",
-    "@adobe/helix-log": "4.5.2",
-    "@adobe/openwhisk-action-builder": "2.15.0",
-    "@pollyjs/adapter-node-http": "5.0.0",
-    "@pollyjs/core": "5.0.0",
-    "@pollyjs/persister-fs": "5.0.0",
-    "@semantic-release/changelog": "5.0.1",
-    "@semantic-release/exec": "5.0.0",
-    "@semantic-release/git": "9.0.0",
-    "chai": "4.2.0",
-    "chai-http": "4.3.0",
-    "codecov": "3.8.0",
-    "commitizen": "4.2.2",
-    "cz-conventional-changelog": "3.3.0",
-    "eslint": "7.12.0",
-    "eslint-plugin-header": "3.1.0",
-    "eslint-plugin-import": "2.22.1",
-    "jsdoc-to-markdown": "6.0.1",
-    "junit-report-builder": "2.1.0",
-    "lint-staged": "10.4.2",
-    "mocha": "8.2.0",
-    "nock": "13.0.4",
-    "nyc": "15.1.0",
-    "proxyquire": "2.1.3",
-    "semantic-release": "17.2.1"
+    "assemblyscript": "^0.14.11"
   },
-  "lint-staged": {
-    "*.js": "eslint"
+  "dependencies": {
+    "@fastly/as-compute": "^0.1.1"
   },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-conventional-changelog"
-    },
-    "ghooks": {
-      "pre-commit": "npx lint-staged"
-    }
+  "scripts": {
+    "asbuild:untouched": "asc assembly/index.ts --target debug",
+    "asbuild:optimized": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
   }
 }

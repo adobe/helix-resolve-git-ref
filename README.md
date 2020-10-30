@@ -1,32 +1,37 @@
-# Helix Resolve-Git-Ref
+# Compute@Edge default starter kit for AssemblyScript
 
-> An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.
+Get to know the Fastly Compute@Edge environment with a basic starter that demonstrates routing, simple synthetic responses, and overriding caching rules.
 
-## Status
-[![codecov](https://img.shields.io/codecov/c/github/adobe/helix-resolve-git-ref.svg)](https://codecov.io/gh/adobe/helix-resolve-git-ref)
-[![CircleCI](https://img.shields.io/circleci/project/github/adobe/helix-resolve-git-ref.svg)](https://circleci.com/gh/adobe/helix-resolve-git-ref)
-[![GitHub license](https://img.shields.io/github/license/adobe/helix-resolve-git-ref.svg)](https://github.com/adobe/helix-resolve-git-ref/blob/main/LICENSE.txt)
-[![GitHub issues](https://img.shields.io/github/issues/adobe/helix-resolve-git-ref.svg)](https://github.com/adobe/helix-resolve-git-ref/issues)
-[![LGTM Code Quality Grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/adobe/helix-resolve-git-ref.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/adobe/helix-resolve-git-ref)
-[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+**For more details about this and other starter kits for Compute@Edge, see the [Fastly developer hub](https://developer.fastly.com/solutions/starters)**
 
-## Installation
+## Features
 
-## Usage
+* Add headers to an inbound request
+* Allow only requests with particular HTTP methods
+* Match request URL path and methods for routing
+* Build synthetic responses at the edge
+* Send requests to a backend
+* Override caching policy response headers
 
-```bash
-curl "https://adobeioruntime.net/api/v1/web/helix/helix-services/resolve-git-ref@v1?owner=adobe&repo=helix-resolve-git-ref&ref=main"
+## Understanding the code
+
+This starter is intentionally lightweight, and requires no dependencies aside from the [`@fastly/as-compute`](https://npmjs.com/package/@fastly/as-compute) package. It will help you understand the basics of processing requests at the edge using Fastly. This starter includes implementations of common patterns explained in our [using Compute@Edge](/learning/compute/using/) and [VCL migration](/learning/compute/migrate) guides.
+
+The path `/backend` will attempt to send a request to a backend called "backend_name".  If the service you have installed this starter on doesn't have a backend defined, use the [`fastly backend create`](/reference/cli/backend/create/) command to create one. Modify the following lines of the starter to use the name of the backend you created:
+
+```typescript
+// The name of a backend server associated with this service.
+//
+// This should be changed to match the name of your own backend. See the the
+// `Hosts` section of the Fastly Wasm service UI for more information.
+const BACKEND_NAME = "backend_name";
+
+/// The name of a second backend associated with this service.
+const OTHER_BACKEND_NAME = "other_backend_name";
 ```
 
-For more, see the [API documentation](docs/API.md).
+The starter uses two backends, so if you want to, go ahead and create two backends using the [CLI](https://developer.fastly.com/reference/cli) and then modify both names here. You should now have a Fastly service running on Compute@Edge that can talk to your backends, and generate synthetic responses at the edge.
 
-## Development
+## Security issues
 
-### Deploying Helix Resolve-Git-Ref
-
-Deploying Helix Resolve-Git-Ref requires the `wsk` command line client, authenticated to a namespace of your choice. For Project Helix, we use the `helix` namespace.
-
-All commits to `main` that pass the testing will be deployed automatically. All commits to branches that will pass the testing will get commited as `/helix-services/resolve-git-ref@ci<num>` and tagged with the CI build number.
-
-
+Please see our [SECURITY.md](SECURITY.md) for guidance on reporting security-related issues.
