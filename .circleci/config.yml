@@ -96,6 +96,11 @@ jobs:
           fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH} | sed -e 's/:[^:\/\/]/="/g;s/$/"/g;s/ *=/=/g' | grep -e "^ID" >> $BASH_ENV
           source $BASH_ENV
           echo $ID
+          if [ -z ${ID+x} ]; 
+            then echo "ID is unset"; 
+          else 
+            echo "ID is set to '$ID'"; 
+          fi
 
 
     - run:
