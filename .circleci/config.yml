@@ -3,7 +3,7 @@ version: 2.1
 executors:
   node10:
     docker:
-    - image: trieloff/githop:node
+    - image: circleci/node:10-stretch
       environment:
         NPM_CONFIG_PREFIX: "~/.npm-global"
     working_directory: ~/repo
@@ -14,6 +14,10 @@ orbs:
 commands:
   setup:
     steps:
+    - run:
+        name: Installing Fastly CLI
+        command: curl -L https://github.com/fastly/cli/releases/download/v0.18.0/fastly_v0.18.0_linux-386.tar.gz | tar zxv
+
     - checkout
     # - restore_cache:
     #     keys:
@@ -21,6 +25,7 @@ commands:
     - run:
         name: Installing Dependencies
         command: npm ci
+
     # - save_cache:
     #     paths:
     #     - node_modules
