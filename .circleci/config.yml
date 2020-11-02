@@ -93,9 +93,7 @@ jobs:
     - run:
         name: Init Fastly Service
         command: |
-          fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}  | head -n 1 | sed -e "s/ID: //" > .serviceid
-          echo 'export SERVICE_ID=$(cat .service)' >> $BASH_ENV
-          echo ${SERVICE_ID}
+          fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
 
     - run:
         name: Branch Deployment
