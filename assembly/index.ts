@@ -66,6 +66,12 @@ function main(req: Request): Response {
             cacheOverride,
         }).wait();
 
+        if (myresp.status() >= 400 && myresp.status() < 500) {
+            return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
+                status: 404
+            });
+        }
+
         const lines = myresp.text().split("\n");
         for (let i = 0; i < lines.length; i++) {
             if (ref == "" && lines[i].indexOf("symref=HEAD:") > 0) {
@@ -80,6 +86,12 @@ function main(req: Request): Response {
                 sha = lines[i].substr(0, lines[i].indexOf(" refs/tags/" + ref));
                 ref = "refs/tags/" + ref;
             }
+        }
+
+        if (ref == "") {
+            return new Response(String.UTF8.encode('ref not found'), {
+                status: 404
+            });
         }
 
         const myheaders = new Headers();
