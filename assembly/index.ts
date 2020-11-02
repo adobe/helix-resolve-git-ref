@@ -76,6 +76,10 @@ function main(req: Request): Response {
                 sha = lines[i].substr(0, lines[i].indexOf(" refs/heads/" + ref));
                 ref = "refs/heads/" + ref;
             }
+            if (ref != "" && sha == "" && lines[i].indexOf(" refs/tags/" + ref) > 0) {
+                sha = lines[i].substr(0, lines[i].indexOf(" refs/tags/" + ref));
+                ref = "refs/tags/" + ref;
+            }
         }
 
         const myheaders = new Headers();
