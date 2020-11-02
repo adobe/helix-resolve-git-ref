@@ -117,6 +117,10 @@ jobs:
         command: fastly compute deploy -s $ID
 
     - run:
+        name: Wait for service to be updated
+        command: sleep 60
+
+    - run:
         name: Post-Deployment Integration Test
         command: npm run test-postdeploy
     - store_test_results:
