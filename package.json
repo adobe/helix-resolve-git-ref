@@ -15,10 +15,11 @@
   },
   "homepage": "https://github.com/fastly/compute-starter-kit-assemblyscript-default#readme",
   "devDependencies": {
-    "@as-pect/cli": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "assemblyscript": "^0.14.11",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^7.12.1",
     "typescript": "^4.0.5"
   },
@@ -33,6 +34,7 @@
     "postpack": "mkdir -p pkg && mv ${npm_package_name}-${npm_package_version}.tgz pkg/${npm_package_name}.tar.gz",
     "lint": "eslint .",
     "test-ci": "echo no tests yet",
-    "deploy-ci": "fastly compute deploy --service-id=${ID}"
+    "deploy-ci": "fastly compute deploy --service-id=${ID}",
+    "test-postdeploy": "mocha --reporter xunit --reporter-options output=./junit/test-results.xml -g 'Post-Deploy'"
   }
 }
