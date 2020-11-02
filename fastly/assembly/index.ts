@@ -1,14 +1,5 @@
 import { Request,  Response, Fastly, Headers } from "@fastly/as-compute";
 
-// The name of a backend server associated with this service.
-//
-// This should be changed to match the name of your own backend. See the the
-// `Hosts` section of the Fastly Wasm service UI for more information.
-const BACKEND_NAME = "backend_name";
-
-/// The name of a second backend associated with this service.
-const OTHER_BACKEND_NAME = "other_backend_name";
-
 function getQueryParam(qs: string, param: string): string {
     const pairs = qs.split("&");
     for (let i = 0; i < pairs.length; i++) {
@@ -44,9 +35,7 @@ function main(req: Request): Response {
         });
     }
 
-    let method = req.method();
     let urlParts = req.url().split("//").pop().split("/");
-    let host = urlParts.shift();
     let path = ("/" + urlParts.join("/"));
     let qs = getQueryString(path);
 
@@ -57,7 +46,7 @@ function main(req: Request): Response {
 
     if (owner != "" && repo != "" && true) {
         let cacheOverride = new Fastly.CacheOverride();
-        cacheOverride.setTTL(60);
+        cacheOverride.setTTL(30);
 
         const myreq = new Request("https://github.com/" + owner + "/" + repo + ".git/info/refs?service=git-upload-pack", {});
 
@@ -109,7 +98,7 @@ function main(req: Request): Response {
           });
     }
 
-    return new Response(String.UTF8.encode('owner and repo are mandatory parameters'), {
+    return new Response(String.UTF8.encode('owner and repo are mandatory parameters!'), {
         status: 400
     });
 }

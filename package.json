@@ -1,8 +1,8 @@
 {
-  "name": "compute-starter-kit-assemblyscript-default",
-  "version": "1.0.0",
+  "name": "helix-resolve-git-ref",
+  "version": "2.0.0",
   "description": "Default package starter kit for AssemblyScript based Compute@Edge projects",
-  "main": "src/index.ts",
+  "main": "fastly/assembly/index.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fastly/compute-starter-kit-assemblyscript-default.git"
@@ -21,8 +21,10 @@
     "@fastly/as-compute": "^0.1.1"
   },
   "scripts": {
-    "asbuild:untouched": "asc assembly/index.ts --target debug",
-    "asbuild:optimized": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
+    "asbuild:untouched": "asc fastly/assembly/index.ts --target debug",
+    "asbuild:optimized": "asc fastly/assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
+    "prepack": "npm run asbuild:optimized",
+    "postpack": "mkdir -p pck && mv ${npm_package_name}-${npm_package_version}.tgz pkg/${npm_package_name}.tar.gz",
   }
 }
