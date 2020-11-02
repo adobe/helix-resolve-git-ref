@@ -16,7 +16,7 @@ commands:
     steps:
     - run:
         name: Installing Fastly CLI
-        command: mkdir ~/.bin && curl -L https://github.com/fastly/cli/releases/download/v0.18.0/fastly_v0.18.0_linux-386.tar.gz | tar zxv && mv fastly ~/.bin/
+        command: mkdir ~/.bin && curl -L https://github.com/fastly/cli/releases/download/v0.18.0/fastly_v0.18.0_linux-386.tar.gz | tar zxv && mv fastly ~/.bin/ && echo 'export PATH=$PATH:~/.bin' >> $BASH_ENV
 
     - checkout
     # - restore_cache:
@@ -92,7 +92,8 @@ jobs:
 
     - run:
         name: Init Fastly Service
-        command: ~/.bin/fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}
+        command: |
+          fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}  | head -n 1 | sed -e "s/ID: //"
 
     - run:
         name: configure wsk
