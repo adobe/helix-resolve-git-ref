@@ -93,7 +93,7 @@ jobs:
     - run:
         name: Init Fastly Service
         command: |
-          echo $(fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH} || echo "ID: null") | sed -e 's/:[^:\/\/]/="/g;s/$/"/g;s/ *=/=/g' | grep -e "^ID" >> $BASH_ENV
+          echo $(fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH} || echo "ID: null") | head -n 1 | sed -e 's/ID: /ID=/' | sed -e 's/ .*//' >> $BASH_ENV
           source $BASH_ENV
           echo $ID
           if [ "$ID" = "null" ]; then 
