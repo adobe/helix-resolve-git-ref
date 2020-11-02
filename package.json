@@ -1,19 +1,18 @@
 {
   "name": "helix-resolve-git-ref",
   "version": "2.0.0",
-  "description": "Default package starter kit for AssemblyScript based Compute@Edge projects",
+  "description": "A Fastly Compute@Edge Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.",
   "main": "fastly/assembly/index.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fastly/compute-starter-kit-assemblyscript-default.git"
+    "url": "https://github.com/adobe/helix-resolve-git-ref.git"
   },
-  "keywords": [],
-  "author": "oss@fastly.com",
-  "license": "MIT",
+  "author": "",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/fastly/compute-starter-kit-assemblyscript-default/issues"
+    "url": "https://github.com/adobe/helix-resolve-git-ref/issues"
   },
-  "homepage": "https://github.com/fastly/compute-starter-kit-assemblyscript-default#readme",
+  "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
