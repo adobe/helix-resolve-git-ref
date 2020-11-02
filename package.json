@@ -30,7 +30,7 @@
     "asbuild:optimized": "asc fastly/assembly/index.ts --target release",
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "prepack": "npm run asbuild:optimized",
-    "postpack": "mkdir -p pck && mv ${npm_package_name}-${npm_package_version}.tgz pkg/${npm_package_name}.tar.gz",
+    "postpack": "mkdir -p pkg && mv ${npm_package_name}-${npm_package_version}.tgz pkg/${npm_package_name}.tar.gz",
     "lint": "eslint .",
     "test-ci": "echo no tests yet",
     "deploy-ci": "fastly compute deploy --service-id=${ID}"
