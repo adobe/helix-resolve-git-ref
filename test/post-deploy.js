@@ -21,14 +21,12 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 function getbaseurl() {
-  const namespace = 'helix';
-  const package = 'helix-services';
   const name = packjson.name.replace('@adobe/helix-', '');
   let version = `${packjson.version}`;
-  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'master') {
+  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
     version = `ci${process.env.CIRCLE_BUILD_NUM}`;
   }
-  return `api/v1/web/${namespace}/${package}/${name}@${version}`;
+  return `https://helix-${name}-${process.env.CIRCLE_BRANCH || 'main'}.edgecompute.app`;
 }
 
 describe('Post-Deploy Tests #online #postdeploy', () => {
@@ -36,8 +34,8 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
     let url;
 
     await chai
-      .request('https://adobeioruntime.net/')
-      .get(`${getbaseurl()}?owner=adobe&repo=helix-resolve-git-ref&ref=v1.7.8`)
+      .request(getbaseurl())
+      .get(`?owner=adobe&repo=helix-resolve-git-ref&ref=v1.7.8`)
       .then((response) => {
         url = response.request.url;
 
@@ -53,8 +51,8 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
     let url;
 
     await chai
-      .request('https://adobeioruntime.net/')
-      .get(`${getbaseurl()}?owner=trieloff&repo=test`)
+      .request(getbaseurl())
+      .get(`?owner=trieloff&repo=test`)
       .then((response) => {
         url = response.request.url;
 
@@ -65,23 +63,4 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
         throw e;
       });
   }).timeout(10000);
-});
-
-describe('Post-Deploy Tests on Preprod #online #postdeploy', () => {
-  it('correct sha is returned', async () => {
-    let url;
-
-    await chai
-      .request('https://preprod.adobeioruntime.net/')
-      .get(`${getbaseurl()}?owner=adobe&repo=helix-resolve-git-ref&ref=v1.7.8`)
-      .then((response) => {
-        url = response.request.url;
-
-        expect(response).to.have.status(200);
-        expect(response).to.be.json;
-      }).catch((e) => {
-        e.message = `At ${url}\n      ${e.message}`;
-        throw e;
-      });
-  }).timeout(60000);
 });
