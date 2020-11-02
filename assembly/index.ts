@@ -91,7 +91,7 @@ function main(req: Request): Response {
           });
     }
 
-    return new Response(String.UTF8.encode('Specify owner and repo, please.'), {
+    return new Response(String.UTF8.encode('owner and repo are mandatory parameters'), {
         status: 400
     });
 }
