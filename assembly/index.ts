@@ -72,6 +72,12 @@ function main(req: Request): Response {
             });
         }
 
+        if (myresp.status() >= 500) {
+            return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
+                status: 502 // bad gateway
+            });
+        }
+
         const lines = myresp.text().split("\n");
         for (let i = 0; i < lines.length; i++) {
             if (ref == "" && lines[i].indexOf("symref=HEAD:") > 0) {
