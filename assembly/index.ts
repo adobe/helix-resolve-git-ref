@@ -88,7 +88,7 @@ function main(req: Request): Response {
             }
         }
 
-        if (ref == "") {
+        if (sha == "") {
             return new Response(String.UTF8.encode('ref not found'), {
                 status: 404
             });
