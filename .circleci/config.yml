@@ -16,7 +16,7 @@ commands:
     steps:
     - run:
         name: Installing Fastly CLI
-        command: curl -L https://github.com/fastly/cli/releases/download/v0.18.0/fastly_v0.18.0_linux-386.tar.gz | tar zxv && mv fastly ~/.bin/
+        command: mkdir ~/.bin && curl -L https://github.com/fastly/cli/releases/download/v0.18.0/fastly_v0.18.0_linux-386.tar.gz | tar zxv && mv fastly ~/.bin/
 
     - checkout
     # - restore_cache:
