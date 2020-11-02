@@ -74,13 +74,14 @@ function main(req: Request): Response {
             }
             if (ref != "" && sha == "" && lines[i].indexOf(" refs/heads/" + ref) > 0) {
                 sha = lines[i].substr(0, lines[i].indexOf(" refs/heads/" + ref));
+                ref = "refs/heads/" + ref;
             }
         }
 
         const myheaders = new Headers();
         myheaders.set("Content-Type", "application/json");
 
-        return new Response(String.UTF8.encode('{ "owner": "' + owner + '", "repo": "' + repo + '", "ref": "' + ref + '", "sha": "' + sha + '"  }'), {
+        return new Response(String.UTF8.encode('{ "fqRef": "' + ref + '", "sha": "' + sha + '"  }'), {
             status: 200,
             headers: myheaders
           });
