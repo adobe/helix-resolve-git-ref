@@ -26,7 +26,7 @@ function getbaseurl() {
   if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
     version = `ci${process.env.CIRCLE_BUILD_NUM}`;
   }
-  return `https://helix-${name}-${process.env.CIRCLE_BRANCH || 'main'}.edgecompute.app`;
+  return `https://${name}-${process.env.CIRCLE_BRANCH || 'main'}.edgecompute.app`;
 }
 
 describe('Post-Deploy Tests #online #postdeploy', () => {
