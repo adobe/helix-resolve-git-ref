@@ -114,7 +114,7 @@ jobs:
 
     - run:
         name: Branch Deployment
-        command: npm run deploy-ci
+        command: fastly compute deploy -s $ID
 
     - run:
         name: Post-Deployment Integration Test
