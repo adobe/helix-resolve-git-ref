@@ -15,6 +15,7 @@
   },
   "homepage": "https://github.com/fastly/compute-starter-kit-assemblyscript-default#readme",
   "devDependencies": {
+    "@as-pect/cli": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "assemblyscript": "^0.14.11",
@@ -30,6 +31,7 @@
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
     "prepack": "npm run asbuild:optimized",
     "postpack": "mkdir -p pck && mv ${npm_package_name}-${npm_package_version}.tgz pkg/${npm_package_name}.tar.gz",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test-ci": "echo no tests yet"
   }
 }
