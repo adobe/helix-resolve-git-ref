@@ -103,7 +103,7 @@ jobs:
             echo New Service $ID;
 
             fastly domain  add -s $ID --version=1 --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}.edgecompute.app
-            fastly backend add -s $ID --version=1 --name=GitHub --address=github.com
+            fastly backend add -s $ID --version=1 --name=GitHub --address=github.com --use-ssl
           else 
             echo "ID is set to '$ID'"; 
           fi
