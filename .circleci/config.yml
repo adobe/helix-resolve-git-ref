@@ -93,12 +93,8 @@ jobs:
     - run:
         name: Init Fastly Service
         command: |
-          echo 'export SERVICE_ID=$(fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}  | head -n 1 | sed -e "s/ID: //")' >> $BASH_ENV
+          fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}  | head -n 1 | sed -e "s/ID: //" > .serviceid
           echo ${SERVICE_ID}
-
-    - run:
-        name: configure wsk
-        command: echo -e "APIHOST=https://adobeioruntime.net\nNAMESPACE=helix\nAUTH=$WSK_AUTH\n" > ~/.wskprops
 
     - run:
         name: Branch Deployment
