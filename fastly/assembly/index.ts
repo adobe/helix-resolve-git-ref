@@ -1,5 +1,5 @@
 import { Request, Response, Fastly, Headers, ResponseInit } from "@fastly/as-compute";
-import { Console, Time } from "as-wasi";
+import { Console, Date } from "as-wasi";
 
 Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": {}}');
 
