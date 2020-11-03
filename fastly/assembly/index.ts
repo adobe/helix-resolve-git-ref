@@ -1,7 +1,7 @@
 import { Request, Response, Fastly, Headers, ResponseInit } from "@fastly/as-compute";
-import { Console } from "as-wasi";
+import { Console, Time } from "as-wasi";
 
-Console.log('{ "timestamp": ' + Date.now.toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": {}}');
+Console.log('{ "timestamp": ' + Time.MILLISECOND.toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": {}}');
 
 function getQueryParam(qs: string, param: string): string {
   const pairs = qs.split("&");
