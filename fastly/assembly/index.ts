@@ -27,7 +27,7 @@ function getQueryString(path: string):string {
 // the request to a backend, make completely new requests, and/or generate
 // synthetic responses.
 function main(req: Request): Response {
-  // Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
+  Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
 
 
 
