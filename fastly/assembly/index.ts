@@ -1,8 +1,6 @@
 import { Request, Response, Fastly, Headers, ResponseInit } from "@fastly/as-compute";
 import { Console, Date } from "as-wasi";
 
-Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "message": "hello from the edge" }}');
-
 function getQueryParam(qs: string, param: string): string {
   const pairs = qs.split("&");
   for (let i = 0; i < pairs.length; i++) {
@@ -27,8 +25,10 @@ function getQueryString(path: string):string {
 // the request to a backend, make completely new requests, and/or generate
 // synthetic responses.
 function main(req: Request): Response {
-  // Make any desired changes to the client request.
-  req.headers().set("Host", "example.com");
+    const start = Date.now();
+    Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
+
+
 
   // We can filter requests that have unexpected methods.
   const VALID_METHODS = ["HEAD", "GET", "POST"];
@@ -95,6 +95,8 @@ function main(req: Request): Response {
 
     const myheaders = new Headers();
     myheaders.set("Content-Type", "application/json");
+
+    Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
 
     return new Response(String.UTF8.encode('{ "fqRef": "' + ref + '", "sha": "' + sha + '"  }'), {
       status: 200,
