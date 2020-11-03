@@ -25,8 +25,8 @@ function getQueryString(path: string):string {
 // the request to a backend, make completely new requests, and/or generate
 // synthetic responses.
 function main(req: Request): Response {
-    const start = Date.now();
-    Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
+  const start = Date.now();
+  Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
 
 
 
@@ -59,14 +59,14 @@ function main(req: Request): Response {
     }).wait();
 
     if (myresp.status() >= 400 && myresp.status() < 500) {
-        Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
+      Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
       return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
         status: 404
       });
     }
 
     if (myresp.status() >= 500) {
-        Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 5, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
+      Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 5, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
       return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
         status: 502 // bad gateway
       });
