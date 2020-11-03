@@ -22,10 +22,6 @@ const { expect } = chai;
 
 function getbaseurl() {
   const name = packjson.name.replace('@adobe/helix-', '');
-  let version = `${packjson.version}`;
-  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
-    version = `ci${process.env.CIRCLE_BUILD_NUM}`;
-  }
   return `https://${name}-${process.env.CIRCLE_BRANCH || 'main'}.edgecompute.app`;
 }
 
