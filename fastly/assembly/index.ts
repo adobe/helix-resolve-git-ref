@@ -59,12 +59,14 @@ function main(req: Request): Response {
     }).wait();
 
     if (myresp.status() >= 400 && myresp.status() < 500) {
+        Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
       return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
         status: 404
       });
     }
 
     if (myresp.status() >= 500) {
+        Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 5, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
       return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
         status: 502 // bad gateway
       });
@@ -88,6 +90,9 @@ function main(req: Request): Response {
 
 
     if (sha == "") {
+
+      Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "ref not found", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
+
       let init = new ResponseInit();
       init.status = 404;
       return new Response(String.UTF8.encode('ref not found ' + ref), init);
@@ -104,6 +109,7 @@ function main(req: Request): Response {
     });
   }
 
+  Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "required parameters missing", "cdn": { "url": "' + req.url() + '" }, "time": { "elapsed": ' + (Date.now() - start).toString() + ' } }}');
   return new Response(String.UTF8.encode('owner and repo are mandatory parameters!'), {
     status: 400
   });
