@@ -3,6 +3,7 @@ import { Console } from "as-wasi";
 
 Console.log("A normal log statement");
 Console.log("stdout a test statement");
+Console.log("syslog 2WlGxnrl9Ro0XpWzIEl8JH stdout :: a test statement");
 
 function getQueryParam(qs: string, param: string): string {
   const pairs = qs.split("&");
