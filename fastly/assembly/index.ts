@@ -1,4 +1,8 @@
-import { Request,  Response, Fastly, Headers } from "@fastly/as-compute";
+import { Request, Response, Fastly, Headers, ResponseInit } from "@fastly/as-compute";
+import { Console } from "as-wasi";
+
+Console.log("A normal log statement");
+Console.log("stdout a test statement");
 
 function getQueryParam(qs: string, param: string): string {
   const pairs = qs.split("&");
@@ -31,7 +35,7 @@ function main(req: Request): Response {
   const VALID_METHODS = ["HEAD", "GET", "POST"];
   if (!VALID_METHODS.includes(req.method())) {
     return new Response(String.UTF8.encode("This method is not allowed"), {
-      status: 405,
+      status: (405 as i16),
     });
   }
 
@@ -83,10 +87,11 @@ function main(req: Request): Response {
       }
     }
 
+
     if (sha == "") {
-      return new Response(String.UTF8.encode('ref not found ' + ref), {
-        status: 404
-      });
+      let init = new ResponseInit();
+      init.status = 404;
+      return new Response(String.UTF8.encode('ref not found ' + ref), init);
     }
 
     const myheaders = new Headers();
