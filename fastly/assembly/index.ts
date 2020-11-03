@@ -1,6 +1,8 @@
 import { Request, Response, Fastly, Headers, ResponseInit } from "@fastly/as-compute";
 import { Console, Date } from "as-wasi";
 
+Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "message": "log from edge" }}');
+
 function getQueryParam(qs: string, param: string): string {
   const pairs = qs.split("&");
   for (let i = 0; i < pairs.length; i++) {
@@ -25,7 +27,6 @@ function getQueryString(path: string):string {
 // the request to a backend, make completely new requests, and/or generate
 // synthetic responses.
 function main(req: Request): Response {
-  const start = Date.now();
   Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
 
 
