@@ -1,5 +1,5 @@
 import { Request, Response, Fastly, Headers, ResponseInit } from "@fastly/as-compute";
-import { Console, Date } from "as-wasi";
+import { CoralogixLogger } from "./coralogix";
 
 function getQueryParam(qs: string, param: string): string {
   const pairs = qs.split("&");
@@ -25,13 +25,13 @@ function getQueryString(path: string):string {
 // the request to a backend, make completely new requests, and/or generate
 // synthetic responses.
 function main(req: Request): Response {
-  Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" } }}');
-
+  const logger = new CoralogixLogger("helix-resolve-git-ref", req);
 
 
   // We can filter requests that have unexpected methods.
   const VALID_METHODS = ["HEAD", "GET", "POST"];
   if (!VALID_METHODS.includes(req.method())) {
+    logger.error("Invalid method " + req.method());
     return new Response(String.UTF8.encode("This method is not allowed"), {
       status: (405 as i16),
     });
@@ -57,15 +57,17 @@ function main(req: Request): Response {
       cacheOverride,
     }).wait();
 
+    logger.debug("Response received for " + owner + "/" + repo);
+
     if (myresp.status() >= 400 && myresp.status() < 500) {
-      // Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }}}');
+      logger.error("Repo not found "  + owner + "/" + repo + "(" + myresp.status().toString(10) + ")");
       return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
         status: 404
       });
     }
 
     if (myresp.status() >= 500) {
-      // Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 5, "json": { "message": "failed to fetch git repo info", "cdn": { "url": "' + req.url() + '" }}}');
+      logger.error("Bad gateway "  + owner + "/" + repo + "(" + myresp.status().toString(10) + ")");
       return new Response(String.UTF8.encode('failed to fetch git repo info (statusCode: ' + myresp.status().toString(10) +', statusMessage: ' + myresp.statusText() + ')'), {
         status: 502 // bad gateway
       });
@@ -89,9 +91,6 @@ function main(req: Request): Response {
 
 
     if (sha == "") {
-
-      // Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 4, "json": { "message": "ref not found", "cdn": { "url": "' + req.url() + '" }}}');
-
       let init = new ResponseInit();
       init.status = 404;
       return new Response(String.UTF8.encode('ref not found ' + ref), init);
@@ -100,7 +99,7 @@ function main(req: Request): Response {
     const myheaders = new Headers();
     myheaders.set("Content-Type", "application/json");
 
-    // Console.log('{ "timestamp": ' + Date.now().toString() + ', "applicationName":"fastly-edgecompute", "subsystemName":"helix-resolve-git-ref", "severity": 3, "json": { "cdn": { "url": "' + req.url() + '" }}}');
+    logger.debug("returning " +  + owner + "/" + repo + " " + sha);
 
     return new Response(String.UTF8.encode('{ "fqRef": "' + ref + '", "sha": "' + sha + '"  }'), {
       status: 200,
