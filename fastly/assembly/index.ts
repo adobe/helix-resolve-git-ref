@@ -99,7 +99,7 @@ function main(req: Request): Response {
     const myheaders = new Headers();
     myheaders.set("Content-Type", "application/json");
 
-    logger.debug("returning " +  + owner + "/" + repo + " " + sha);
+    logger.debug("returning " + owner + "/" + repo + " " + sha);
 
     return new Response(String.UTF8.encode('{ "fqRef": "' + ref + '", "sha": "' + sha + '"  }'), {
       status: 200,
