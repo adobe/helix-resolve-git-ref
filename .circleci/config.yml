@@ -16,7 +16,7 @@ commands:
     steps:
     - run:
         name: Installing Fastly CLI
-        command: mkdir ~/.bin && curl -L https://github.com/fastly/cli/releases/download/v0.18.0/fastly_v0.18.0_linux-386.tar.gz | tar zxv && mv fastly ~/.bin/ && echo 'export PATH=$PATH:~/.bin' >> $BASH_ENV
+        command: mkdir ~/.bin && curl -L https://github.com/fastly/cli/releases/download/v0.18.1/fastly_v0.18.1_linux-386.tar.gz | tar zxv && mv fastly ~/.bin/ && echo 'export PATH=$PATH:~/.bin' >> $BASH_ENV
 
     - checkout
     # - restore_cache:
@@ -91,6 +91,11 @@ jobs:
         command: git checkout -- package-lock.json
 
     - run:
+        name: Upgrade AssemblyScript version
+        # the assemblyscript versions needed by npm test and npm pack are not aligned
+        command: npm install -D "assemblyscript@0.14.11"
+
+    - run:
         name: Init Fastly Service
         command: |
           echo $(fastly service search --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH} || echo "ID: null") | head -n 1 | sed -e 's/ID: /ID=/' | sed -e 's/ .*//' >> $BASH_ENV
@@ -104,7 +109,7 @@ jobs:
 
             fastly domain  add          -s $ID --version=1 --name=${CIRCLE_PROJECT_REPONAME}-${CIRCLE_BRANCH}.edgecompute.app
             fastly backend add          -s $ID --version=1 --name=GitHub --address=github.com --use-ssl --override-host=github.com --port=443
-            fastly logging https create -s $ID --version=1 --name=stdout --content-type=application/json --header-name=private_key --header-value=$CORALOGIX_KEY --url=https://api.coralogix.com/logs/rest/singles --json-format=1 --message-type=blank --placement=none
+            fastly logging https create -s $ID --version=1 --name=Coralogix --content-type=application/json --header-name=private_key --header-value=$CORALOGIX_KEY --url=https://api.coralogix.com/logs/rest/singles --json-format=1 --message-type=blank --placement=none
           else
             echo "ID is set to '$ID'";
           fi
