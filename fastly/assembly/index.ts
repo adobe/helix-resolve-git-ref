@@ -78,11 +78,11 @@ function main(req: Request): Response {
         ref = refline.substr(0, refline.indexOf(" "));
       }
       if (ref != "" && sha == "" && lines[i].indexOf(" refs/heads/" + ref) > 0) {
-        sha = lines[i].substr(0, lines[i].indexOf(" refs/heads/" + ref));
+        sha = lines[i].substr(4, lines[i].indexOf(" refs/heads/" + ref));
         ref = "refs/heads/" + ref;
       }
       if (ref != "" && sha == "" && lines[i].indexOf(" refs/tags/" + ref) > 0) {
-        sha = lines[i].substr(0, lines[i].indexOf(" refs/tags/" + ref));
+        sha = lines[i].substr(4, lines[i].indexOf(" refs/tags/" + ref));
         ref = "refs/tags/" + ref;
       }
     }
