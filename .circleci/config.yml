@@ -109,9 +109,9 @@ workflows:
         filters:
           branches:
             ignore: main
-    - semantic-release:
-        requires:
-        - build
-        filters:
-          branches:
-            only: main
+#    - semantic-release:
+#        requires:
+#        - build
+#        filters:
+#          branches:
+#            only: main
