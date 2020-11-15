@@ -12,14 +12,15 @@
 
 /* eslint-disable prefer-promise-reject-errors */
 
-const https = require('https');
-
 const { wrap: helixStatus } = require('@adobe/helix-status');
 const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap } = require('@adobe/openwhisk-action-utils');
 const { epsagon } = require('@adobe/helix-epsagon');
-
-const DEFAULT_BRANCH_RE = /symref=HEAD:(\S+)/;
+const {
+  resolve: resolveRef,
+  ResolveError,
+  NetworkError,
+} = require('@adobe/gh-resolve-ref');
 
 /**
  * This is the main function. It resolves the specified reference to the corresponding
@@ -46,120 +47,62 @@ function lookup(params) {
     __ow_headers = {},
   } = params;
 
-  const githubToken = params.GITHUB_TOKEN || __ow_headers['x-github-token'];
+  const token = params.GITHUB_TOKEN || __ow_headers['x-github-token'];
 
-  return new Promise((resolve/* , reject */) => {
-    if (!owner || !repo) {
-      resolve({
-        statusCode: 400,
-        body: 'owner and repo are mandatory parameters',
-      });
-      return;
-    }
-
-    const options = {
-      host: 'github.com',
-      path: `/${owner}/${repo}.git/info/refs?service=git-upload-pack`,
-    };
-    if (githubToken) {
-      // the git transfer protocol supports basic auth with any user name and the token as password
-      options.auth = `any_user:${githubToken}`;
-    }
-
-    https.get(options, (res) => {
-      const { statusCode, statusMessage } = res;
-      if (statusCode !== 200) {
-        // consume response data to free up memory
-        res.resume();
+  return resolveRef({
+    owner,
+    repo,
+    ref,
+    token,
+  })
+    .then((result) => {
+      if (result) {
+        return {
+          statusCode: 200,
+          headers: { 'Content-Type': 'application/json' },
+          body: result,
+        };
+      } else {
+        return {
+          statusCode: 404,
+          body: 'ref not found',
+        };
+      }
+    })
+    .catch((err) => {
+      if (err instanceof TypeError) {
+        return {
+          statusCode: 400,
+          body: 'owner and repo are mandatory parameters',
+        };
+      } else if (err instanceof NetworkError) {
+        // (temporary?) network issue
+        return {
+          statusCode: 503, // service unavailable
+          body: `failed to fetch git repo info: ${err.message}`,
+        };
+      } else /* istanbul ignore next */ if (err instanceof ResolveError) {
+        const { statusCode, message } = err;
         let status = 500;
-        if (statusCode >= 400 && statusCode <= 499) {
-          // not found
-          status = 404;
-        }
         if (statusCode >= 500 && statusCode <= 599) {
           // bad gateway
           status = 502;
+        } else /* istanbul ignore next */ if (statusCode === 404) {
+          // repo not found
+          status = 404;
         }
-        resolve({
+        return {
           statusCode: status,
-          body: `failed to fetch git repo info (statusCode: ${statusCode}, statusMessage: ${statusMessage})`,
-        });
-        return;
+          body: `failed to fetch git repo info (statusCode: ${statusCode}, message: ${message})`,
+        };
+      } else {
+        /* istanbul ignore next */
+        return {
+          statusCode: 500,
+          body: `failed to fetch git repo info: ${err})`,
+        };
       }
-      res.setEncoding('utf8');
-      const searchTerms = [];
-      if (ref) {
-        if (ref.startsWith('refs/')) {
-          // full ref name (e.g. 'refs/tags/v0.1.2')
-          searchTerms.push(ref);
-        } else {
-          // short ref name, potentially ambiguous (e.g. 'main', 'v0.1.2')
-          searchTerms.push(`refs/heads/${ref}`);
-          searchTerms.push(`refs/tags/${ref}`);
-        }
-      }
-      let resolved = false;
-      let truncatedLine = '';
-      // header consists of the first 2 lines in the payload
-      const header = [];
-      let processedHeader = false;
-      const dataHandler = (chunk) => {
-        const data = truncatedLine + chunk;
-        const lines = data.split('\n');
-        // remember last (truncated) line; will be '' if chunk ends with '\n'
-        truncatedLine = lines.pop();
-        while (header.length < 2 && lines.length) {
-          header.push(lines.shift());
-        }
-        /* istanbul ignore if */
-        if (header.length < 2) {
-          // need to read past initial 2 header lines
-          // wait for next chunk
-          return;
-        }
-        /* istanbul ignore else */
-        if (!processedHeader) {
-          // need to do this only once
-          processedHeader = true;
-          if (!ref) {
-            // extract default branch from 2nd header line
-            searchTerms.push(header[1].match(DEFAULT_BRANCH_RE)[1]);
-          }
-        }
-        const result = lines.filter((row) => {
-          const parts = row.split(' ');
-          return parts.length === 2 && searchTerms.includes(parts[1]);
-        }).map((row) => row.substr(4).split(' ')); // skip leading pkt-len (4 bytes) (https://git-scm.com/docs/protocol-common#_pkt_line_format)
-        if (result.length) {
-          resolve({
-            statusCode: 200,
-            headers: { 'Content-Type': 'application/json' },
-            body: {
-              sha: result[0][0],
-              fqRef: result[0][1],
-            },
-          });
-          resolved = true;
-          res.off('data', dataHandler);
-        }
-      };
-      res.on('data', dataHandler);
-      res.on('end', () => {
-        if (!resolved) {
-          resolve({
-            statusCode: 404,
-            body: 'ref not found',
-          });
-        }
-      });
-    }).on('error', (e) => {
-      // (temporary?) network issue
-      resolve({
-        statusCode: 503, // service unavailable
-        body: `failed to fetch git repo info:\n${String(e.stack)}`,
-      });
     });
-  });
 }
 
 /**

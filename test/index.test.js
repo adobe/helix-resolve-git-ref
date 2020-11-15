@@ -95,12 +95,12 @@ describe('main tests', () => {
     assert.equal(typeof result, 'object');
   });
 
-  it('main function returns 404 for missing owner param', async () => {
+  it('main function returns 400 for missing owner param', async () => {
     const { statusCode } = await main({ repo: REPO, ref: SHORT_REF });
     assert.equal(statusCode, 400);
   });
 
-  it('main function returns 404 for missing repo param', async () => {
+  it('main function returns 400 for missing repo param', async () => {
     const { statusCode } = await main({ owner: OWNER, ref: SHORT_REF });
     assert.equal(statusCode, 400);
   });
@@ -114,7 +114,6 @@ describe('main tests', () => {
   it('ref param is optional (fallback: default branch) for test repo', async () => {
     const result = await main({ owner: 'trieloff', repo: 'test' });
     const { statusCode, body: { fqRef } } = result;
-    console.log(result);
     assert.equal(statusCode, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
