@@ -1,3 +1,10 @@
+## [1.7.12](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.11...v1.7.12) (2020-11-18)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#306](https://github.com/adobe/helix-resolve-git-ref/issues/306)) ([01e2692](https://github.com/adobe/helix-resolve-git-ref/commit/01e269249c3500b6ea4fadb7eaf29bc6f809400b))
+
 ## [1.7.11](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.10...v1.7.11) (2020-11-13)
 
 
