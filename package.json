@@ -33,7 +33,7 @@
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
     "@adobe/gh-resolve-ref": "1.1.0",
-    "@adobe/helix-epsagon": "1.5.4",
+    "@adobe/helix-epsagon": "1.5.5",
     "@adobe/helix-status": "8.2.2",
     "@adobe/openwhisk-action-logger": "2.2.2",
     "@adobe/openwhisk-action-utils": "4.4.0"
