@@ -12,97 +12,26 @@
 
 /* eslint-disable prefer-promise-reject-errors */
 
-const { wrap: helixStatus } = require('@adobe/helix-status');
-const { logger } = require('@adobe/openwhisk-action-logger');
+// const { logger } = require('@adobe/openwhisk-action-logger');
+// const { epsagon } = require('@adobe/helix-epsagon');
 const { wrap } = require('@adobe/openwhisk-action-utils');
-const { epsagon } = require('@adobe/helix-epsagon');
-const {
-  resolve: resolveRef,
-  ResolveError,
-  NetworkError,
-} = require('@adobe/gh-resolve-ref');
+const { Response } = require('node-fetch');
+const { helixStatus } = require('./status-adapter.js');
+const lookup = require('./lookup.js');
 
-/**
- * This is the main function. It resolves the specified reference to the corresponding
- * sha of the HEAD commit at `ref`.
- *
- * If the specified repository is private you have to provide a valid GitHub access token
- * either via `x-github-token` header or `GITHUB_TOKEN` action parameter.
- *
- * @param {Object} params The OpenWhisk parameters
- * @param {string} params.owner GitHub organization or user
- * @param {string} params.repo GitHub repository name
- * @param {string} [params.ref=<default branch>] git reference (branch or tag name)
- * @param {Object} params.__ow_headers The request headers of this web action invokation
- * @returns {Promise<object>} result
- * @returns {string} result.sha the sha of the HEAD commit at `ref`
- * @returns {string} result.fqRef the fully qualified name of `ref`
- *                                (e.g. `refs/heads/<branch>` or `refs/tags/<tag>`)
- */
-function lookup(params) {
-  const {
-    owner,
-    repo,
-    ref,
-    __ow_headers = {},
-  } = params;
-
-  const token = params.GITHUB_TOKEN || __ow_headers['x-github-token'];
-
-  return resolveRef({
-    owner,
-    repo,
-    ref,
-    token,
-  })
-    .then((result) => {
-      if (result) {
-        return {
-          statusCode: 200,
-          headers: { 'Content-Type': 'application/json' },
-          body: result,
-        };
-      } else {
-        return {
-          statusCode: 404,
-          body: 'ref not found',
-        };
-      }
-    })
-    .catch((err) => {
-      if (err instanceof TypeError) {
-        return {
-          statusCode: 400,
-          body: 'owner and repo are mandatory parameters',
-        };
-      } else if (err instanceof NetworkError) {
-        // (temporary?) network issue
-        return {
-          statusCode: 503, // service unavailable
-          body: `failed to fetch git repo info: ${err.message}`,
-        };
-      } else /* istanbul ignore next */ if (err instanceof ResolveError) {
-        const { statusCode, message } = err;
-        let status = 500;
-        if (statusCode >= 500 && statusCode <= 599) {
-          // bad gateway
-          status = 502;
-        } else /* istanbul ignore next */ if (statusCode === 404) {
-          // repo not found
-          status = 404;
-        }
-        return {
-          statusCode: status,
-          body: `failed to fetch git repo info (statusCode: ${statusCode}, message: ${message})`,
-        };
-      } else {
-        /* istanbul ignore next */
-        return {
-          statusCode: 500,
-          body: `failed to fetch git repo info: ${err})`,
-        };
-      }
-    });
+async function main(req, context) {
+  const url = new URL(req.url);
+  // TODO: query params are used a lot and should be context properties
+  const params = Array.from(url.searchParams.entries()).reduce((p, [key, value]) => {
+    // eslint-disable-next-line no-param-reassign
+    p[key] = value;
+    return p;
+  }, {});
+  const result = await lookup(params);
+  return new Response(JSON.stringify(result.body), {
+    headers: result.headers,
+    status: result.statusCode,
+  });
 }
 
 /**
@@ -110,8 +39,8 @@ function lookup(params) {
  * @param params Action params
  * @returns {Promise<*>} The response
  */
-module.exports.main = wrap(lookup)
-  .with(epsagon)
-  .with(helixStatus, { github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack' })
-  .with(logger.trace)
-  .with(logger);
+module.exports.main = wrap(main)
+//   .with(epsagon)
+  .with(helixStatus, { github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack' });
+//   .with(logger.trace)
+//   .with(logger);
