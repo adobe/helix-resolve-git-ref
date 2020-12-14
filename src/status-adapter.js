@@ -16,18 +16,12 @@ const { report, HEALTHCHECK_PATH } = require('@adobe/helix-status');
 
 function adapter(fn, opts) {
   return async (req, context) => {
-    // TODO: ow_path / rawPath should be a context property
-    const url = new URL(req.url);
-    const idx = url.pathname.indexOf(context.func.name);
-    if (idx >= 0) {
-      const suffix = url.pathname.substring(idx + context.func.name.length);
-      if (suffix === HEALTHCHECK_PATH) {
-        const result = await report(opts);
-        return new Response(JSON.stringify(result.body), {
-          headers: result.headers,
-          status: result.statusCode,
-        });
-      }
+    if (context.pathInfo.suffix === HEALTHCHECK_PATH) {
+      const result = await report(opts);
+      return new Response(JSON.stringify(result.body), {
+        headers: result.headers,
+        status: result.statusCode,
+      });
     }
     return fn(req, context);
   };
