@@ -12,15 +12,16 @@
 
 /* eslint-disable prefer-promise-reject-errors */
 
-// const { logger } = require('@adobe/openwhisk-action-logger');
 // const { epsagon } = require('@adobe/helix-epsagon');
+const { wrap: helixStatus } = require('@adobe/helix-status');
+const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap } = require('@adobe/openwhisk-action-utils');
 const { Response } = require('node-fetch');
-const { helixStatus } = require('./status-adapter.js');
 const lookup = require('./lookup.js');
 
 async function main(req, context) {
   const url = new URL(req.url);
+
   // TODO: query params are used a lot and should be context properties
   const params = Array.from(url.searchParams.entries()).reduce((p, [key, value]) => {
     // eslint-disable-next-line no-param-reassign
@@ -41,6 +42,6 @@ async function main(req, context) {
  */
 module.exports.main = wrap(main)
 //   .with(epsagon)
-  .with(helixStatus, { github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack' });
-//   .with(logger.trace)
-//   .with(logger);
+  .with(helixStatus, { github: 'https://github.com/adobe/helix-resolve-git-ref.git/info/refs?service=git-upload-pack' })
+  .with(logger.trace)
+  .with(logger);
