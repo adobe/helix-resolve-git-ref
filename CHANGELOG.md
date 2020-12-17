@@ -1,3 +1,10 @@
+## [1.7.20](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.19...v1.7.20) (2020-12-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-logger to v2.3.1 ([#322](https://github.com/adobe/helix-resolve-git-ref/issues/322)) ([6e20077](https://github.com/adobe/helix-resolve-git-ref/commit/6e200770215976593784988133093f0c4ecde1e7))
+
 ## [1.7.19](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.18...v1.7.19) (2020-12-17)
 
 
