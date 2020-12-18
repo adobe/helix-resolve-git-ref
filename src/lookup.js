@@ -40,10 +40,8 @@ function lookup(params) {
     owner,
     repo,
     ref,
-    __ow_headers = {},
+    GITHUB_TOKEN: token,
   } = params;
-
-  const token = params.GITHUB_TOKEN || __ow_headers['x-github-token'];
 
   return resolveRef({
     owner,

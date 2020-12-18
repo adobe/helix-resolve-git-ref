@@ -13,8 +13,8 @@
     "docs": "npx jsdoc2md -c .jsdoc.json --files 'src/*.js'  > docs/API.md",
     "commit": "git-cz",
     "build": "hedy -v",
-    "deploy": "hedy -v --deploy --target=wsk --test=/_status_check/healthcheck.json",
-    "deploy-ci": "hedy -v --deploy --target=wsk --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci",
+    "deploy": "hedy -v --deploy --test=/_status_check/healthcheck.json",
+    "deploy-ci": "hedy -v --deploy --test=/_status_check/healthcheck.json --pkgVersion=ci$CIRCLE_BUILD_NUM -l ci",
     "deploy-sequences": "hedy --target=wsk --no-build -no-hints -l latest -l major -l minor"
   },
   "wsk": {
@@ -33,8 +33,7 @@
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
     "@adobe/gh-resolve-ref": "1.1.0",
-    "@adobe/helix-deploy": "1.7.0",
-    "@adobe/helix-epsagon": "1.5.5",
+    "@adobe/helix-deploy": "1.8.0",
     "@adobe/helix-status": "9.0.0",
     "@adobe/openwhisk-action-logger": "2.3.0",
     "@adobe/openwhisk-action-utils": "4.4.0",
