@@ -24,7 +24,6 @@ const NodeHttpAdapter = require('@pollyjs/adapter-node-http');
 const FSPersister = require('@pollyjs/persister-fs');
 const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
-const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
 const { fetch, disconnectAll } = require('@adobe/helix-fetch').context({ httpsProtocols: ['http1'] });
 const pkgJson = require('../package.json');
 
@@ -205,7 +204,7 @@ describe('main tests', () => {
   it('main() with path /_status_check/healthcheck.json reports status', async () => {
     const { status, body } = await main({}, {}, {
       pathInfo: {
-        suffix: '/_status_check/healthcheck.json'
+        suffix: '/_status_check/healthcheck.json',
       },
     });
     assert.equal(status, 200);
