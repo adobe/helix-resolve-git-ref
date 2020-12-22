@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.20...v1.8.0) (2020-12-22)
+
+
+### Features
+
+* enable universal deploy ([ffb9fd5](https://github.com/adobe/helix-resolve-git-ref/commit/ffb9fd510085e233aa628c2f46eb56d355ebd238)), closes [#319](https://github.com/adobe/helix-resolve-git-ref/issues/319)
+
 ## [1.7.20](https://github.com/adobe/helix-resolve-git-ref/compare/v1.7.19...v1.7.20) (2020-12-17)
 
 
