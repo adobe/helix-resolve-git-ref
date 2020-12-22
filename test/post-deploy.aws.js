@@ -16,27 +16,35 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const packjson = require('../package.json');
+require('dotenv').config();
 
 chai.use(chaiHttp);
 const { expect } = chai;
 
 function getbaseurl() {
-  const namespace = 'helix';
   const package = 'helix-services';
   const name = packjson.name.replace('@adobe/helix-', '');
   let version = `${packjson.version}`;
-  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'master') {
+  if (process.env.CI && process.env.CIRCLE_BUILD_NUM && process.env.CIRCLE_BRANCH !== 'main') {
     version = `ci${process.env.CIRCLE_BUILD_NUM}`;
   }
-  return `api/v1/web/${namespace}/${package}/${name}@${version}`;
+  return `/${package}/${name}_${version}`;
 }
 
-describe('Post-Deploy Tests #online #postdeploy', () => {
+const HOST = `https://${process.env.HLX_AWS_API}.execute-api.${process.env.HLX_AWS_REGION}.amazonaws.com`;
+
+describe('Post-Deploy Tests (AWS)', () => {
+  before(function before() {
+    if (!process.env.HLX_AWS_API || !process.env.HLX_AWS_REGION) {
+      this.skip();
+    }
+  });
+
   it('correct sha is returned', async () => {
     let url;
 
     await chai
-      .request('https://adobeioruntime.net/')
+      .request(HOST)
       .get(`${getbaseurl()}?owner=adobe&repo=helix-resolve-git-ref&ref=v1.7.8`)
       .then((response) => {
         url = response.request.url;
@@ -53,7 +61,7 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
     let url;
 
     await chai
-      .request('https://adobeioruntime.net/')
+      .request(HOST)
       .get(`${getbaseurl()}?owner=trieloff&repo=test`)
       .then((response) => {
         url = response.request.url;
@@ -65,23 +73,4 @@ describe('Post-Deploy Tests #online #postdeploy', () => {
         throw e;
       });
   }).timeout(10000);
-});
-
-describe('Post-Deploy Tests on Preprod #online #postdeploy', () => {
-  it('correct sha is returned', async () => {
-    let url;
-
-    await chai
-      .request('https://preprod.adobeioruntime.net/')
-      .get(`${getbaseurl()}?owner=adobe&repo=helix-resolve-git-ref&ref=v1.7.8`)
-      .then((response) => {
-        url = response.request.url;
-
-        expect(response).to.have.status(200);
-        expect(response).to.be.json;
-      }).catch((e) => {
-        e.message = `At ${url}\n      ${e.message}`;
-        throw e;
-      });
-  }).timeout(60000);
 });
