@@ -18,13 +18,12 @@ process.env.HELIX_FETCH_FORCE_HTTP1 = 'true';
 
 const assert = require('assert');
 const path = require('path');
+const querystring = require('querystring');
 
 const NodeHttpAdapter = require('@pollyjs/adapter-node-http');
 const FSPersister = require('@pollyjs/persister-fs');
 const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
-const proxyquire = require('proxyquire');
-const { MemLogger, SimpleInterface } = require('@adobe/helix-log');
 const { fetch, disconnectAll } = require('@adobe/helix-fetch').context({ httpsProtocols: ['http1'] });
 const pkgJson = require('../package.json');
 
@@ -34,23 +33,17 @@ const PRIVATE_REPO = 'project-helix';
 const SHORT_REF = 'main';
 const FULL_REF = 'refs/heads/main';
 
-const { main } = proxyquire('../src/index.js', {
-  epsagon: {
-    openWhiskWrapper(action) {
-      return (params) => action(params);
-    },
-  },
-});
+const index = require('../src/index.js');
 
-function createLogger(level = 'info') {
-  const logger = new MemLogger({
-    level,
-    filter: (fields) => ({
-      ...fields,
-      timestamp: '1970-01-01T00:00:00.000Z',
-    }),
-  });
-  return new SimpleInterface({ logger });
+function main(params, headers = {}, context = {}) {
+  if (!context.env) {
+    context.env = {};
+  }
+  // emulate universal api
+  return index.main({
+    url: `https://www.dummy.com/resolve?${querystring.stringify(params)}`,
+    headers: new Map(Object.entries(headers)),
+  }, context);
 }
 
 /**
@@ -96,50 +89,57 @@ describe('main tests', () => {
   });
 
   it('main function returns 400 for missing owner param', async () => {
-    const { statusCode } = await main({ repo: REPO, ref: SHORT_REF });
-    assert.equal(statusCode, 400);
+    const { status } = await main({ repo: REPO, ref: SHORT_REF });
+    assert.equal(status, 400);
   });
 
   it('main function returns 400 for missing repo param', async () => {
-    const { statusCode } = await main({ owner: OWNER, ref: SHORT_REF });
-    assert.equal(statusCode, 400);
+    const { status } = await main({ owner: OWNER, ref: SHORT_REF });
+    assert.equal(status, 400);
   });
 
   it('ref param is optional (fallback: default branch)', async () => {
-    const { statusCode, body: { fqRef } } = await main({ owner: OWNER, repo: REPO });
-    assert.equal(statusCode, 200);
+    const { status, body } = await main({ owner: OWNER, repo: REPO });
+    const { fqRef } = JSON.parse(body);
+    assert.equal(status, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
 
   it('ref param is optional (fallback: default branch) for test repo', async () => {
-    const result = await main({ owner: 'trieloff', repo: 'test' });
-    const { statusCode, body: { fqRef } } = result;
-    assert.equal(statusCode, 200);
+    const { status, body } = await main({ owner: 'trieloff', repo: 'test' });
+    const { fqRef } = JSON.parse(body);
+    assert.equal(status, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
 
   it('main function returns valid sha format', async () => {
-    const { statusCode, body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    assert.equal(statusCode, 200);
+    const { status, body } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { sha } = JSON.parse(body);
+    assert.equal(status, 200);
     assert(isValidSha(sha));
   });
 
   it('main function supports short and full ref names', async () => {
-    const { body: { sha: sha1 } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: FULL_REF });
+    const { body: body1 } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { body: body2 } = await main({ owner: OWNER, repo: REPO, ref: FULL_REF });
+    const { sha: sha1 } = JSON.parse(body1);
+    const { sha: sha2 } = JSON.parse(body2);
     assert.equal(sha1, sha2);
   });
 
   it('main function resolves tag', async () => {
     const ref = 'v1.0.0';
-    const { body: { sha: sha1, fqRef } } = await main({ owner: OWNER, repo: REPO, ref });
+    const { body: body1 } = await main({ owner: OWNER, repo: REPO, ref });
+    const { fqRef, sha: sha1 } = JSON.parse(body1);
     assert.equal(fqRef, `refs/tags/${ref}`);
-    const { body: { sha: sha2 } } = await main({ owner: OWNER, repo: REPO, ref: `refs/tags/${ref}` });
+    const { body: body2 } = await main({ owner: OWNER, repo: REPO, ref: `refs/tags/${ref}` });
+    const { sha: sha2 } = JSON.parse(body2);
     assert.equal(sha1, sha2);
   });
 
   it('main function returns correct sha', async () => {
-    const { body: { sha } } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { body } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { sha } = JSON.parse(body);
     try {
       const resp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`);
       assert.ok(resp.ok);
@@ -152,64 +152,73 @@ describe('main tests', () => {
   });
 
   it('main function returns 404 for non-existing ref', async () => {
-    const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: 'unknown' });
-    assert.equal(statusCode, 404);
+    const { status } = await main({ owner: OWNER, repo: REPO, ref: 'unknown' });
+    assert.equal(status, 404);
   });
 
   it('main function returns 404 for non-existing repo', async () => {
-    const { statusCode } = await main({ owner: OWNER, repo: 'unknown', ref: SHORT_REF });
-    assert.equal(statusCode, 404);
+    const { status } = await main({ owner: OWNER, repo: 'unknown', ref: SHORT_REF });
+    assert.equal(status, 404);
   });
 
   it('main() works with private GitHub repo (gh token via header)', async () => {
-    const { statusCode, body: { fqRef } } = await main({
+    const { status, body } = await main({
       owner: OWNER,
       repo: PRIVATE_REPO,
       ref: SHORT_REF,
-      __ow_headers: { 'x-github-token': 'undisclosed-github-token' },
+    }, {
+      'x-github-token': 'undisclosed-github-token',
     });
-    assert.equal(statusCode, 200);
+    const { fqRef } = JSON.parse(body);
+    assert.equal(status, 200);
     assert.equal(fqRef, FULL_REF);
   });
 
   it('main() works with private GitHub repo (gh token via param)', async () => {
-    const { statusCode, body: { fqRef } } = await main({
+    const { status, body } = await main({
       owner: OWNER,
       repo: PRIVATE_REPO,
       ref: SHORT_REF,
       GITHUB_TOKEN: 'undisclosed-github-token',
     });
-    assert.equal(statusCode, 200);
+    const { fqRef } = JSON.parse(body);
+    assert.equal(status, 200);
+    assert.equal(fqRef, FULL_REF);
+  });
+
+  it('main() works with private GitHub repo (gh token via env)', async () => {
+    const { status, body } = await main({
+      owner: OWNER,
+      repo: PRIVATE_REPO,
+      ref: SHORT_REF,
+    }, {}, {
+      env: {
+        GITHUB_TOKEN: 'undisclosed-github-token',
+      },
+    });
+    const { fqRef } = JSON.parse(body);
+    assert.equal(status, 200);
     assert.equal(fqRef, FULL_REF);
   });
 
   it('main() with path /_status_check/healthcheck.json reports status', async () => {
-    const res = await main({ __ow_method: 'get', __ow_path: '/_status_check/healthcheck.json' });
-    assert.equal(res.statusCode, 200);
-    assert.ok(res.body.github);
-    delete res.body.github;
-    assert.ok(res.body.response_time);
-    delete res.body.response_time;
-    delete res.body.process;
-    assert.deepEqual(res.body, {
+    const { status, body } = await main({}, {}, {
+      pathInfo: {
+        suffix: '/_status_check/healthcheck.json',
+      },
+    });
+    assert.equal(status, 200);
+    const result = JSON.parse(body);
+
+    assert.ok(result.github);
+    delete result.github;
+    assert.ok(result.response_time);
+    delete result.response_time;
+    delete result.process;
+    assert.deepEqual(result, {
       status: 'OK',
       version: pkgJson.version,
     });
-  });
-
-  it('index function instruments epsagon', async function test() {
-    const { server } = this.polly;
-    server.any().intercept((req, res) => {
-      res.status(200);
-    });
-    const logger = createLogger();
-    await main({
-      EPSAGON_TOKEN: 'foobar',
-      __ow_logger: logger,
-    }, logger);
-
-    const output = JSON.stringify(logger.logger.buf[0]);
-    assert.strictEqual(output, '{"level":"info","timestamp":"1970-01-01T00:00:00.000Z","message":["instrumenting epsagon."]}');
   });
 
   // eslint-disable-next-line func-names
@@ -221,8 +230,8 @@ describe('main tests', () => {
       });
     });
 
-    const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    assert.equal(statusCode, 502);
+    const { status } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    assert.equal(status, 502);
   });
 });
 
@@ -237,8 +246,8 @@ describe('network/server error tests', () => {
     // simulate network problem
     nock.disableNetConnect();
     try {
-      const { statusCode } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-      assert.equal(statusCode, 503);
+      const { status } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+      assert.equal(status, 503);
     } finally {
       nock.cleanAll();
       nock.enableNetConnect();

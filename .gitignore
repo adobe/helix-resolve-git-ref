@@ -8,3 +8,4 @@ logs
 test-results.xml
 dist
 *.rest
+.env
