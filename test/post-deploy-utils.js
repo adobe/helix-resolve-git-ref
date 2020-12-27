@@ -71,7 +71,7 @@ class AWSTarget extends OpenwhiskTarget {
   }
 
   urlPath() {
-    return `/${this.package}/${this.name}_${this.version}`;
+    return `/${this.package}/${this.name}/${this.version}`;
   }
 
   // eslint-disable-next-line class-methods-use-this
