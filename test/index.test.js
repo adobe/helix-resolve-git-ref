@@ -24,7 +24,7 @@ const NodeHttpAdapter = require('@pollyjs/adapter-node-http');
 const FSPersister = require('@pollyjs/persister-fs');
 const { setupMocha: setupPolly } = require('@pollyjs/core');
 const nock = require('nock');
-const { fetch, disconnectAll } = require('@adobe/helix-fetch').context({ httpsProtocols: ['http1'] });
+const { fetch, reset } = require('@adobe/helix-fetch').context({ alpnProtocols: ['http/1.1'] });
 const pkgJson = require('../package.json');
 
 const OWNER = 'adobe';
@@ -99,55 +99,55 @@ describe('main tests', () => {
   });
 
   it('ref param is optional (fallback: default branch)', async () => {
-    const { status, body } = await main({ owner: OWNER, repo: REPO });
-    const { fqRef } = JSON.parse(body);
-    assert.equal(status, 200);
+    const resp = await main({ owner: OWNER, repo: REPO });
+    const { fqRef } = await resp.json();
+    assert.equal(resp.status, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
 
   it('ref param is optional (fallback: default branch) for test repo', async () => {
-    const { status, body } = await main({ owner: 'trieloff', repo: 'test' });
-    const { fqRef } = JSON.parse(body);
-    assert.equal(status, 200);
+    const resp = await main({ owner: 'trieloff', repo: 'test' });
+    const { fqRef } = await resp.json();
+    assert.equal(resp.status, 200);
     assert.equal(fqRef, 'refs/heads/main');
   });
 
   it('main function returns valid sha format', async () => {
-    const { status, body } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    const { sha } = JSON.parse(body);
-    assert.equal(status, 200);
+    const resp = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { sha } = await resp.json();
+    assert.equal(resp.status, 200);
     assert(isValidSha(sha));
   });
 
   it('main function supports short and full ref names', async () => {
-    const { body: body1 } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    const { body: body2 } = await main({ owner: OWNER, repo: REPO, ref: FULL_REF });
-    const { sha: sha1 } = JSON.parse(body1);
-    const { sha: sha2 } = JSON.parse(body2);
+    const resp1 = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const resp2 = await main({ owner: OWNER, repo: REPO, ref: FULL_REF });
+    const { sha: sha1 } = await resp1.json();
+    const { sha: sha2 } = await resp2.json();
     assert.equal(sha1, sha2);
   });
 
   it('main function resolves tag', async () => {
     const ref = 'v1.0.0';
-    const { body: body1 } = await main({ owner: OWNER, repo: REPO, ref });
-    const { fqRef, sha: sha1 } = JSON.parse(body1);
+    let resp = await main({ owner: OWNER, repo: REPO, ref });
+    const { fqRef, sha: sha1 } = await resp.json();
     assert.equal(fqRef, `refs/tags/${ref}`);
-    const { body: body2 } = await main({ owner: OWNER, repo: REPO, ref: `refs/tags/${ref}` });
-    const { sha: sha2 } = JSON.parse(body2);
+    resp = await main({ owner: OWNER, repo: REPO, ref: `refs/tags/${ref}` });
+    const { sha: sha2 } = await resp.json();
     assert.equal(sha1, sha2);
   });
 
   it('main function returns correct sha', async () => {
-    const { body } = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
-    const { sha } = JSON.parse(body);
+    let resp = await main({ owner: OWNER, repo: REPO, ref: SHORT_REF });
+    const { sha } = await resp.json();
     try {
-      const resp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`);
+      resp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/branches/${SHORT_REF}`, { cache: 'no-store' });
       assert.ok(resp.ok);
       const { commit } = await resp.json();
       assert.ok(commit);
       assert.equal(commit.sha, sha);
     } finally {
-      await disconnectAll();
+      await reset();
     }
   });
 
@@ -162,32 +162,32 @@ describe('main tests', () => {
   });
 
   it('main() works with private GitHub repo (gh token via header)', async () => {
-    const { status, body } = await main({
+    const resp = await main({
       owner: OWNER,
       repo: PRIVATE_REPO,
       ref: SHORT_REF,
     }, {
       'x-github-token': 'undisclosed-github-token',
     });
-    const { fqRef } = JSON.parse(body);
-    assert.equal(status, 200);
+    const { fqRef } = await resp.json();
+    assert.equal(resp.status, 200);
     assert.equal(fqRef, FULL_REF);
   });
 
   it('main() works with private GitHub repo (gh token via param)', async () => {
-    const { status, body } = await main({
+    const resp = await main({
       owner: OWNER,
       repo: PRIVATE_REPO,
       ref: SHORT_REF,
       GITHUB_TOKEN: 'undisclosed-github-token',
     });
-    const { fqRef } = JSON.parse(body);
-    assert.equal(status, 200);
+    const { fqRef } = await resp.json();
+    assert.equal(resp.status, 200);
     assert.equal(fqRef, FULL_REF);
   });
 
   it('main() works with private GitHub repo (gh token via env)', async () => {
-    const { status, body } = await main({
+    const resp = await main({
       owner: OWNER,
       repo: PRIVATE_REPO,
       ref: SHORT_REF,
@@ -196,19 +196,19 @@ describe('main tests', () => {
         GITHUB_TOKEN: 'undisclosed-github-token',
       },
     });
-    const { fqRef } = JSON.parse(body);
-    assert.equal(status, 200);
+    const { fqRef } = await resp.json();
+    assert.equal(resp.status, 200);
     assert.equal(fqRef, FULL_REF);
   });
 
   it('main() with path /_status_check/healthcheck.json reports status', async () => {
-    const { status, body } = await main({}, {}, {
+    const resp = await main({}, {}, {
       pathInfo: {
         suffix: '/_status_check/healthcheck.json',
       },
     });
-    assert.equal(status, 200);
-    const result = JSON.parse(body);
+    assert.equal(resp.status, 200);
+    const result = await resp.json();
 
     assert.ok(result.github);
     delete result.github;
