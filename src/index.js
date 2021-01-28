@@ -13,7 +13,7 @@
 const { wrap: helixStatus } = require('@adobe/helix-status');
 const { logger } = require('@adobe/openwhisk-action-logger');
 const { wrap } = require('@adobe/openwhisk-action-utils');
-const { Response } = require('node-fetch');
+const { Response } = require('@adobe/helix-fetch');
 const lookup = require('./lookup.js');
 
 async function main(req, context) {
