@@ -34,7 +34,7 @@
   "dependencies": {
     "@adobe/gh-resolve-ref": "1.1.0",
     "@adobe/helix-fetch": "2.0.1",
-    "@adobe/helix-status": "9.0.0",
+    "@adobe/helix-status": "9.0.1",
     "@adobe/openwhisk-action-logger": "2.3.1",
     "@adobe/openwhisk-action-utils": "4.4.0"
   },
