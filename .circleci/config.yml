@@ -105,6 +105,7 @@ workflows:
           branches:
             ignore: main
     - semantic-release:
+        context: Project Helix
         requires:
         - build
         filters:
