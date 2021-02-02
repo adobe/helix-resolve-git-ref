@@ -1,3 +1,10 @@
+## [1.8.5](https://github.com/adobe/helix-resolve-git-ref/compare/v1.8.4...v1.8.5) (2021-02-02)
+
+
+### Bug Fixes
+
+* **ci:** enable AWS monitor ([96464d4](https://github.com/adobe/helix-resolve-git-ref/commit/96464d402bd785252e1f86c3cdb1fc0a8106a33b))
+
 ## [1.8.4](https://github.com/adobe/helix-resolve-git-ref/compare/v1.8.3...v1.8.4) (2021-01-05)
 
 
