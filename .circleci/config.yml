@@ -68,6 +68,7 @@ jobs:
         statuspage_name: Helix Git Reference Resolver
         statuspage_group: Delivery
         newrelic_group_policy: Delivery Repeated Failure
+        aws: true
 
   branch-deploy:
     executor: node12
