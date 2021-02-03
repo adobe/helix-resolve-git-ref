@@ -66,7 +66,7 @@ describe('main tests', () => {
     recordIfMissing: false,
     matchRequestsBy: {
       headers: {
-        exclude: ['authorization', 'User-Agent'],
+        exclude: ['authorization', 'User-Agent', 'accept', 'accept-encoding'],
       },
     },
     logging: false,
