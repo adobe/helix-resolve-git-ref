@@ -1,3 +1,10 @@
+## [1.8.6](https://github.com/adobe/helix-resolve-git-ref/compare/v1.8.5...v1.8.6) (2021-02-02)
+
+
+### Bug Fixes
+
+* **ci:** enable project helix context ([edc9a86](https://github.com/adobe/helix-resolve-git-ref/commit/edc9a867b8dc73f64f331ffa345284c89e981564))
+
 ## [1.8.5](https://github.com/adobe/helix-resolve-git-ref/compare/v1.8.4...v1.8.5) (2021-02-02)
 
 
