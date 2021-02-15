@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.8.10...v1.9.0) (2021-02-15)
+
+
+### Features
+
+* **deps:** keep-alive support ([07a1e15](https://github.com/adobe/helix-resolve-git-ref/commit/07a1e15eacb70116001ab0aa48b07302abf26997))
+
 ## [1.8.10](https://github.com/adobe/helix-resolve-git-ref/compare/v1.8.9...v1.8.10) (2021-02-15)
 
 
