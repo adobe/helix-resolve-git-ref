@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.1...v1.9.2) (2021-02-25)
+
+
+### Bug Fixes
+
+* **deps:** update adobe fixes ([#375](https://github.com/adobe/helix-resolve-git-ref/issues/375)) ([5cb5afb](https://github.com/adobe/helix-resolve-git-ref/commit/5cb5afb21215a9d00a406c9a2517e96dec673a08))
+
 ## [1.9.1](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.0...v1.9.1) (2021-02-17)
 
 
