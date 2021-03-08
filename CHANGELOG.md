@@ -1,3 +1,10 @@
+## [1.9.8](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.7...v1.9.8) (2021-03-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-deploy to v3.8.0 ([#398](https://github.com/adobe/helix-resolve-git-ref/issues/398)) ([bf96bcb](https://github.com/adobe/helix-resolve-git-ref/commit/bf96bcbf6fafe5d5c1e74931d4b838a23111c087))
+
 ## [1.9.7](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.6...v1.9.7) (2021-03-04)
 
 
