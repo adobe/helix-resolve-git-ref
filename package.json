@@ -19,7 +19,8 @@
   },
   "wsk": {
     "namespace": "helix",
-    "name": "helix-services/resolve-git-ref@${version}"
+    "name": "helix-services/resolve-git-ref@${version}",
+    "memory": 256
   },
   "repository": {
     "type": "git",
