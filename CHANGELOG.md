@@ -1,3 +1,10 @@
+## [1.9.14](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.13...v1.9.14) (2021-03-10)
+
+
+### Bug Fixes
+
+* **deploy:** use 256mb memory ([#404](https://github.com/adobe/helix-resolve-git-ref/issues/404)) ([b03650a](https://github.com/adobe/helix-resolve-git-ref/commit/b03650abe57df5f74bd58055e4df0e33e7bc9df2))
+
 ## [1.9.13](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.12...v1.9.13) (2021-03-09)
 
 
