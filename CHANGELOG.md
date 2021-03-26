@@ -1,3 +1,10 @@
+## [1.9.21](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.20...v1.9.21) (2021-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.2.0 ([#421](https://github.com/adobe/helix-resolve-git-ref/issues/421)) ([6ea1ecd](https://github.com/adobe/helix-resolve-git-ref/commit/6ea1ecdbdd5c103a2fcee79a2ca03b2143ba7f9c))
+
 ## [1.9.20](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.19...v1.9.20) (2021-03-26)
 
 
