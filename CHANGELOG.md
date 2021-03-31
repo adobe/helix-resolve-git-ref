@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.22...v1.10.0) (2021-03-31)
+
+
+### Features
+
+* **deploy:** deploy to google ([b192434](https://github.com/adobe/helix-resolve-git-ref/commit/b192434427c562d31829113933633dceaa7c56ac))
+
 ## [1.9.22](https://github.com/adobe/helix-resolve-git-ref/compare/v1.9.21...v1.9.22) (2021-03-26)
 
 
