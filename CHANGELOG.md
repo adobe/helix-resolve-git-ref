@@ -1,3 +1,10 @@
+## [1.10.5](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.4...v1.10.5) (2021-04-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/openwhisk-action-logger to v2.4.4 ([#447](https://github.com/adobe/helix-resolve-git-ref/issues/447)) ([dc56682](https://github.com/adobe/helix-resolve-git-ref/commit/dc56682093f96cc5eba5d5b49c9dac2bfd960fe2))
+
 ## [1.10.4](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.3...v1.10.4) (2021-04-12)
 
 
