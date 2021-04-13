@@ -1,3 +1,10 @@
+## [1.10.6](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.5...v1.10.6) (2021-04-13)
+
+
+### Bug Fixes
+
+* use helix-universal ([4e45a2f](https://github.com/adobe/helix-resolve-git-ref/commit/4e45a2fb32093189de564a6ab57e476737244b7e))
+
 ## [1.10.5](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.4...v1.10.5) (2021-04-12)
 
 
