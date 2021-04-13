@@ -11,9 +11,9 @@
  */
 
 const { wrap: helixStatus } = require('@adobe/helix-status');
-const { logger } = require('@adobe/openwhisk-action-logger');
-const { wrap } = require('@adobe/openwhisk-action-utils');
-const { Response } = require('@adobe/helix-fetch');
+const { logger } = require('@adobe/helix-universal-logger');
+const { wrap } = require('@adobe/helix-shared');
+const { Response } = require('@adobe/helix-universal');
 const lookup = require('./lookup.js');
 
 async function main(req, context) {
