@@ -1,3 +1,10 @@
+## [1.10.8](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.7...v1.10.8) (2021-04-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-shared to v7.25.1 ([#450](https://github.com/adobe/helix-resolve-git-ref/issues/450)) ([d5f1ae2](https://github.com/adobe/helix-resolve-git-ref/commit/d5f1ae257fcfce6f303796820df26d3873f359d7))
+
 ## [1.10.7](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.6...v1.10.7) (2021-04-14)
 
 
