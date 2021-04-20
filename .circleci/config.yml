@@ -65,12 +65,6 @@ jobs:
         name: Link Sequences
         command: npm run deploy-sequences
 
-    - helix-post-deploy/monitoring:
-        statuspage_name: Helix Git Reference Resolver
-        statuspage_group: Delivery
-        newrelic_group_policy: Delivery Repeated Failure
-        aws: true
-
   branch-deploy:
     executor: node12
 
