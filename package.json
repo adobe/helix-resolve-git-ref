@@ -37,12 +37,12 @@
     "@adobe/helix-fetch": "2.2.0",
     "@adobe/helix-shared": "8.0.5",
     "@adobe/helix-status": "9.1.6",
-    "@adobe/helix-universal": "1.4.0",
+    "@adobe/helix-universal": "1.5.0",
     "@adobe/helix-universal-logger": "1.0.3"
   },
   "devDependencies": {
     "@adobe/eslint-config-helix": "1.1.4",
-    "@adobe/helix-deploy": "4.4.1",
+    "@adobe/helix-deploy": "4.5.0",
     "@pollyjs/adapter-node-http": "5.1.0",
     "@pollyjs/core": "5.1.0",
     "@pollyjs/persister-fs": "5.0.0",
