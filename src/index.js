@@ -14,7 +14,7 @@ const { wrap: helixStatus } = require('@adobe/helix-status');
 const { logger } = require('@adobe/helix-universal-logger');
 const { wrap } = require('@adobe/helix-shared');
 const { Response } = require('@adobe/helix-universal');
-const lookup = require('./lookup.js');
+const lookup = require('./lookup');
 
 async function main(req, context) {
   // TODO: query params are used a lot and should be context properties
