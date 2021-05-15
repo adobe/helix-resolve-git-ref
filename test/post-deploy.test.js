@@ -15,7 +15,7 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { createTargets } = require('./post-deploy-utils.js');
+const { createTargets } = require('./post-deploy-utils');
 
 chai.use(chaiHttp);
 const { expect } = chai;

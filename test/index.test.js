@@ -33,7 +33,7 @@ const PRIVATE_REPO = 'project-helix';
 const SHORT_REF = 'main';
 const FULL_REF = 'refs/heads/main';
 
-const index = require('../src/index.js');
+const index = require('../src/index');
 
 function main(params, headers = {}, context = {}) {
   if (!context.env) {
