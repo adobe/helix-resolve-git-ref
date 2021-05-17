@@ -1,3 +1,10 @@
+## [1.10.24](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.23...v1.10.24) (2021-05-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-universal-logger to v1.0.4 ([#490](https://github.com/adobe/helix-resolve-git-ref/issues/490)) ([75aa593](https://github.com/adobe/helix-resolve-git-ref/commit/75aa59304a18d2d721a5aec5c8ff7dfa588b2b04))
+
 ## [1.10.23](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.22...v1.10.23) (2021-05-17)
 
 
