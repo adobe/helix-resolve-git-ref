@@ -1,3 +1,10 @@
+## [1.10.32](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.31...v1.10.32) (2021-06-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-fetch to v2.3.0 ([#511](https://github.com/adobe/helix-resolve-git-ref/issues/511)) ([0b5587c](https://github.com/adobe/helix-resolve-git-ref/commit/0b5587cc67449c58fccdcee5d990d062fa14600f))
+
 ## [1.10.31](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.30...v1.10.31) (2021-06-05)
 
 
