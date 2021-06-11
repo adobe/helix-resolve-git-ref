@@ -34,7 +34,7 @@
   "homepage": "https://github.com/adobe/helix-resolve-git-ref#readme",
   "dependencies": {
     "@adobe/gh-resolve-ref": "1.2.0",
-    "@adobe/helix-fetch": "2.2.1",
+    "@adobe/helix-fetch": "2.3.0",
     "@adobe/helix-shared": "8.0.15",
     "@adobe/helix-status": "9.1.7",
     "@adobe/helix-universal": "1.6.2",
