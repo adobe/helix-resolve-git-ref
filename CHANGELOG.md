@@ -1,3 +1,10 @@
+## [1.10.33](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.32...v1.10.33) (2021-06-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @adobe/helix-universal to v1.6.3 ([#512](https://github.com/adobe/helix-resolve-git-ref/issues/512)) ([ece2940](https://github.com/adobe/helix-resolve-git-ref/commit/ece2940b4c24e55d21de1cd7d1ab9352199e827a))
+
 ## [1.10.32](https://github.com/adobe/helix-resolve-git-ref/compare/v1.10.31...v1.10.32) (2021-06-11)
 
 
