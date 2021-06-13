@@ -35,7 +35,7 @@
   "dependencies": {
     "@adobe/gh-resolve-ref": "1.2.0",
     "@adobe/helix-fetch": "2.3.0",
-    "@adobe/helix-shared": "8.0.16",
+    "@adobe/helix-shared": "8.0.17",
     "@adobe/helix-status": "9.1.8",
     "@adobe/helix-universal": "1.6.3",
     "@adobe/helix-universal-logger": "1.0.5"
