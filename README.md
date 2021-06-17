@@ -1,3 +1,5 @@
+**:warning: This repository is no longer actively maintained.**
+
 # Helix Resolve-Git-Ref
 
 > An OpenWhisk Web Action that resolves a git reference (branch or tag) to the corresponding commit sha.
